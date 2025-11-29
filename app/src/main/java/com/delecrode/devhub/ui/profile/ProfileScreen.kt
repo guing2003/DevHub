@@ -17,6 +17,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -46,17 +47,19 @@ fun ProfileScreen(navController: NavController) {
                         text = "Perfil",
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.background
                 ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Voltar"
+                            contentDescription = "Voltar",
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
@@ -89,15 +92,30 @@ fun ProfileScreen(navController: NavController) {
 
             Column(modifier = Modifier.fillMaxWidth()) {
 
-                Text("Nome: Guilherme Nunes", fontWeight = FontWeight.Bold, fontSize = 22.sp)
+                Text(
+                    text = "Nome: Guilherme Nunes",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text("Username: guing2003", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                Text(
+                    text = "Username: guing2003",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text("Bio: Desenvolvedor Android", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(
+                    text = "Bio: Desenvolvedor Android",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
         }
     }
