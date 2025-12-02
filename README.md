@@ -37,7 +37,7 @@ O projeto utiliza as seguintes tecnologias:
 O projeto segue os princípios da **Clean Architecture**, dividido em camadas para garantir separação de responsabilidades, testabilidade e manutenção:
 
 1.  **Presentation (UI)**: Contém as Activities, Composables e ViewModels.
-2.  **Domain**: Contém as regras de negócio, Casos de Uso (Use Cases) e Interfaces de Repositório. É independente de frameworks.
+2.  **Domain**: Contém as regras de negócio, Interfaces de Repositório. É independente de frameworks.
 3.  **Data**: Implementação dos Repositórios, Fontes de Dados (Data Sources - API/Local) e Mappers.
 
 ---
@@ -72,4 +72,4 @@ Sinta-se à vontade para abrir *issues* e enviar *pull requests*. Sugestões e f
 
 ---
 
-Desenvolvido por **Guilherme Nunes** 🚀
+Desenvolvido por **Guilherme Delecrode** 🚀
