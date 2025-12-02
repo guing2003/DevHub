@@ -9,9 +9,8 @@ import com.delecrode.devhub.domain.repository.GitRepository
 class GitRepositoryImpl(private val apiService: GitApiService) : GitRepository {
 
     override suspend fun getUser(userName: String): User {
-        return try {
+        try {
             val response = apiService.getUser(userName)
-
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
