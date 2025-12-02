@@ -21,7 +21,11 @@ android {
     }
 
     buildTypes {
+        debug{
+            buildConfigField("String", "BASE_URL", "\"https://api.github.com/\"")
+        }
         release {
+            buildConfigField("String", "BASE_URL", "\"https://api.github.com/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -38,10 +42,23 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
+
+    //Koil
+    implementation("io.insert-koin:koin-android:3.5.6")
+    implementation("io.insert-koin:koin-androidx-compose:3.5.6")
+
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //Interceptor
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
     //Navigation Compose
     implementation(libs.androidx.navigation.compose)
     //Coil Compose
