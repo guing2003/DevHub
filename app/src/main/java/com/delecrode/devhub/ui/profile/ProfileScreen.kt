@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +23,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,13 +35,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewModel) {
+
+    val uiState = profileViewModel.uiState.collectAsState()
+    val user = uiState.value.user
+
+    LaunchedEffect(Unit) {
+        profileViewModel.getUser("guing2003")
+    }
 
     Scaffold(
         topBar = {
@@ -66,6 +79,21 @@ fun ProfileScreen(navController: NavController) {
             )
         }
     ) { padding ->
+        if (uiState.value.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.DarkGray)
+                    .zIndex(10f),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .zIndex(11f)
+                )
+            }
+        }
         Column(
             modifier = Modifier
                 .padding(padding)
@@ -73,7 +101,6 @@ fun ProfileScreen(navController: NavController) {
                 .fillMaxSize(),
             horizontalAlignment = CenterHorizontally
         ) {
-
             Spacer(modifier = Modifier.height(16.dp))
 
             Box(
@@ -82,9 +109,11 @@ fun ProfileScreen(navController: NavController) {
                     .wrapContentSize()
             ) {
                 AsyncImage(
-                    model = "https://avatars.githubusercontent.com/u/106880965?s=400&u=dbc61b7f6150d5e285d3063ed0b9dd55d3b2aed1&v=4",
+                    model = user?.avatar_url,
                     contentDescription = "Foto de Perfil",
-                    modifier = Modifier.size(100.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
                 )
             }
 
@@ -93,7 +122,7 @@ fun ProfileScreen(navController: NavController) {
             Column(modifier = Modifier.fillMaxWidth()) {
 
                 Text(
-                    text = "Nome: Guilherme Nunes",
+                    text = "Nome: ${user?.name}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
                     color = MaterialTheme.colorScheme.onBackground
@@ -102,7 +131,7 @@ fun ProfileScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = "Username: guing2003",
+                    text = "UserName: ${user?.login}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     color = MaterialTheme.colorScheme.onBackground
@@ -111,11 +140,23 @@ fun ProfileScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = "Bio: Desenvolvedor Android",
+                    text = "Bio: ${user?.bio}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.onBackground
                 )
+            }
+            if (uiState.value.isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Gray),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = Color.Blue,
+                    )
+                }
             }
         }
     }
@@ -125,5 +166,5 @@ fun ProfileScreen(navController: NavController) {
 @Preview
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen(navController = rememberNavController())
+    ProfileScreen(navController = rememberNavController(), viewModel())
 }
