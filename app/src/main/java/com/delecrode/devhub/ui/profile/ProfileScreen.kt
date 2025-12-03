@@ -49,7 +49,7 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
     val user = uiState.value.user
 
     LaunchedEffect(Unit) {
-        profileViewModel.getUser("guing2003")
+        profileViewModel.getUser("peas")
     }
 
     Scaffold(
@@ -67,97 +67,91 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 ),
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Voltar",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                }
+
+//                navigationIcon = {
+//                    IconButton(onClick = { navController.popBackStack() }) {
+//                        Icon(
+//                            Icons.AutoMirrored.Filled.ArrowBack,
+//                            contentDescription = "Voltar",
+//                            tint = MaterialTheme.colorScheme.onBackground
+//                        )
+//                    }
+//                }
             )
         }
     ) { padding ->
-        if (uiState.value.isLoading) {
-            Box(
+        user.let { user ->
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.DarkGray)
-                    .zIndex(10f),
-                contentAlignment = Alignment.Center
+                    .padding(padding)
+                    .padding(8.dp)
+                    .fillMaxSize(),
+                horizontalAlignment = CenterHorizontally
             ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .zIndex(11f)
-                )
-            }
-        }
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .padding(8.dp)
-                .fillMaxSize(),
-            horizontalAlignment = CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Box(
-                modifier = Modifier
-                    .background(Color.Gray, shape = CircleShape)
-                    .wrapContentSize()
-            ) {
-                AsyncImage(
-                    model = user?.avatar_url,
-                    contentDescription = "Foto de Perfil",
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-
-                Text(
-                    text = "Nome: ${user?.name}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = "UserName: ${user?.login}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = "Bio: ${user?.bio}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            if (uiState.value.isLoading) {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Gray),
-                    contentAlignment = Alignment.Center
+                        .background(Color.Gray, shape = CircleShape)
+                        .wrapContentSize()
                 ) {
-                    CircularProgressIndicator(
-                        color = Color.Blue,
+                    AsyncImage(
+                        model = user?.avatar_url,
+                        contentDescription = "Foto de Perfil",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = CenterHorizontally) {
+
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = user?.name ?: "",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 28.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = user?.login ?: "",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = user?.bio ?: "",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
+        }
+    }
+    if (uiState.value.isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(0.5f)),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(48.dp)
+                    .zIndex(11f)
+            )
         }
     }
 }

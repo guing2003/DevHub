@@ -3,6 +3,7 @@ package com.delecrode.devhub.ui.profile
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.delecrode.devhub.domain.model.User
 import com.delecrode.devhub.domain.repository.GitRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
