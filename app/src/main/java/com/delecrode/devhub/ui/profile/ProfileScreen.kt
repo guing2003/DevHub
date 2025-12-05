@@ -3,6 +3,7 @@ package com.delecrode.devhub.ui.profile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,14 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -47,9 +48,16 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
 
     val uiState = profileViewModel.uiState.collectAsState()
     val user = uiState.value.user
+    val repos = uiState.value.repos
+
+    val userName = "peas"
 
     LaunchedEffect(Unit) {
-        profileViewModel.getUser("peas")
+        profileViewModel.getRepos(userName)
+    }
+
+    LaunchedEffect(Unit) {
+        profileViewModel.getUser(userName)
     }
 
     Scaffold(
@@ -106,7 +114,10 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = CenterHorizontally) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = CenterHorizontally
+                ) {
 
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -136,6 +147,49 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onBackground
                     )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    "Repositórios", fontWeight = FontWeight.Bold,
+                    fontSize = 28.sp,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    items(repos.size) { index ->
+                        val repo = repos[index]
+                        Card(
+                            modifier = Modifier.padding(8.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color.LightGray)
+                                    .padding(10.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(text = repo.name)
+                            }
+
+                            if (repo.description != null) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(10.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(text = repo.description)
+                                }
+
+                            }
+                        }
+                    }
+
                 }
             }
         }
