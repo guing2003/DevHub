@@ -3,6 +3,7 @@ package com.delecrode.devhub.ui.profile
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.delecrode.devhub.domain.model.Repos
 import com.delecrode.devhub.domain.model.User
 import com.delecrode.devhub.domain.repository.GitRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,28 @@ class ProfileViewModel(private val repository: GitRepository) : ViewModel() {
                 )
             } catch (e: Exception) {
                 Log.e("ProfileViewModel", "Erro ao buscar usuário", e)
+                _uiState.value = _uiState.value.copy(
+                    error = e.message,
+                    isLoading = false
+                )
+            }
+        }
+    }
+
+    fun getRepos(userName: String) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                error = null
+            )
+            try {
+                val repos: List<Repos> = repository.getRepos(userName)
+                _uiState.value = _uiState.value.copy(
+                    repos = repos,
+                    isLoading = false
+                )
+            } catch (e: Exception) {
+                Log.e("ProfileViewModel", "Erro ao buscar repositórios", e)
                 _uiState.value = _uiState.value.copy(
                     error = e.message,
                     isLoading = false
