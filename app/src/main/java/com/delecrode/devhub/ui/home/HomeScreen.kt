@@ -1,4 +1,4 @@
-package com.delecrode.devhub.ui.profile
+package com.delecrode.devhub.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -44,20 +44,20 @@ import coil.compose.AsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewModel) {
+fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
 
-    val uiState = profileViewModel.uiState.collectAsState()
+    val uiState = homeViewModel.uiState.collectAsState()
     val user = uiState.value.user
     val repos = uiState.value.repos
 
-    val userName = "peas"
+    val userName = "guing2003"
 
     LaunchedEffect(Unit) {
-        profileViewModel.getRepos(userName)
+        homeViewModel.getRepos(userName)
     }
 
     LaunchedEffect(Unit) {
-        profileViewModel.getUser(userName)
+        homeViewModel.getUser(userName)
     }
 
     Scaffold(
@@ -213,6 +213,6 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
 
 @Preview
 @Composable
-fun ProfileScreenPreview() {
-    ProfileScreen(navController = rememberNavController(), viewModel())
+fun HomeScreenPreview() {
+    HomeScreen(navController = rememberNavController(), viewModel())
 }
