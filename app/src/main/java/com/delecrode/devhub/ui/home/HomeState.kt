@@ -1,9 +1,9 @@
-package com.delecrode.devhub.ui.profile
+package com.delecrode.devhub.ui.home
 
 import com.delecrode.devhub.domain.model.Repos
 import com.delecrode.devhub.domain.model.User
 
-data class ProfileState(
+data class HomeState(
     val isLoading: Boolean = false,
     val user: User? = null,
     val repos: List<Repos> = emptyList(),

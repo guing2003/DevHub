@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
-import com.delecrode.devhub.ui.profile.ProfileScreen
-import com.delecrode.devhub.ui.profile.ProfileViewModel
+import com.delecrode.devhub.ui.home.HomeScreen
+import com.delecrode.devhub.ui.home.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -13,12 +13,12 @@ import org.koin.androidx.compose.koinViewModel
 fun AppNavHost() {
 
     val navController = rememberNavController()
-    val profileViewModel: ProfileViewModel = koinViewModel()
+    val profileViewModel: HomeViewModel = koinViewModel()
 
-    NavHost(navController = navController, startDestination = AppDestinations.Profile.route) {
+    NavHost(navController = navController, startDestination = AppDestinations.Home.route) {
         //Profile Flow
-        composable(AppDestinations.Profile.route) {
-            ProfileScreen(navController, profileViewModel)
+        composable(AppDestinations.Home.route) {
+            HomeScreen(navController, profileViewModel)
         }
     }
 }
