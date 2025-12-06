@@ -247,25 +247,6 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
     }
 }
 
-@Composable
-fun SearchBox(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    placeholder: String = "Buscar..."
-) {
-    OutlinedTextField(
-        value = query,
-        onValueChange = { onQueryChange(it) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        placeholder = {
-            Text(text = placeholder)
-        },
-        singleLine = true
-    )
-}
-
 
 @Preview
 @Composable
