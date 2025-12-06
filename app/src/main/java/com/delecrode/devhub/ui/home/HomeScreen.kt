@@ -1,5 +1,6 @@
 package com.delecrode.devhub.ui.home
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,18 +20,28 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +52,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.delecrode.devhub.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,44 +62,63 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
     val user = uiState.value.user
     val repos = uiState.value.repos
 
-    val userName = "guing2003"
+    var searchText by remember { mutableStateOf("") }
+    var search by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        homeViewModel.getRepos(userName)
+    val context = LocalContext.current
+
+    LaunchedEffect(search) {
+        if (search && searchText.isNotBlank()) {
+            homeViewModel.getRepos(searchText)
+            homeViewModel.getUser(searchText)
+            search = false
+        }
     }
 
-    LaunchedEffect(Unit) {
-        homeViewModel.getUser(userName)
+    LaunchedEffect(uiState.value.error){
+       if (uiState.value.error != null){
+           Toast.makeText(context, uiState.value.error, Toast.LENGTH_SHORT).show()
+           homeViewModel.clearStates()
+       }
     }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(
-                        text = "Perfil",
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
+                    OutlinedTextField(
+                        value = searchText,
+                        onValueChange = { searchText = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 16.dp),
+                        placeholder = { Text("Digite o nome do usuario") },
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                            focusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                        ),
+                        trailingIcon = {
+                            IconButton(onClick = { search = true }) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_search_24),
+                                    contentDescription = "Search"
+                                )
+                            }
+                        }
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
-                ),
-
-//                navigationIcon = {
-//                    IconButton(onClick = { navController.popBackStack() }) {
-//                        Icon(
-//                            Icons.AutoMirrored.Filled.ArrowBack,
-//                            contentDescription = "Voltar",
-//                            tint = MaterialTheme.colorScheme.onBackground
-//                        )
-//                    }
-//                }
+                )
             )
         }
-    ) { padding ->
+    )
+    { padding ->
+
+
         user.let { user ->
             Column(
                 modifier = Modifier
@@ -98,18 +129,22 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Box(
-                    modifier = Modifier
-                        .background(Color.Gray, shape = CircleShape)
-                        .wrapContentSize()
-                ) {
-                    AsyncImage(
-                        model = user?.avatar_url,
-                        contentDescription = "Foto de Perfil",
+
+
+                if (user?.avatar_url != null) {
+                    Box(
                         modifier = Modifier
-                            .size(100.dp)
-                            .clip(CircleShape)
-                    )
+                            .background(Color.Gray, shape = CircleShape)
+                            .wrapContentSize()
+                    ) {
+                        AsyncImage(
+                            model = user.avatar_url,
+                            contentDescription = "Foto de Perfil",
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(CircleShape)
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -150,11 +185,13 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    "Repositórios", fontWeight = FontWeight.Bold,
-                    fontSize = 28.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                if (user?.repos_url != null) {
+                    Text(
+                        "Repositórios", fontWeight = FontWeight.Bold,
+                        fontSize = 28.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
                 Spacer(modifier = Modifier.height(16.dp))
 
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
@@ -208,6 +245,25 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
             )
         }
     }
+}
+
+@Composable
+fun SearchBox(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    placeholder: String = "Buscar..."
+) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = { onQueryChange(it) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        placeholder = {
+            Text(text = placeholder)
+        },
+        singleLine = true
+    )
 }
 
 

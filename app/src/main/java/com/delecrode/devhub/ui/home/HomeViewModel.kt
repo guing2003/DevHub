@@ -57,4 +57,11 @@ class HomeViewModel(private val repository: GitRepository) : ViewModel() {
             }
         }
     }
+
+    fun clearStates(){
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            error = null
+        )
+    }
 }
