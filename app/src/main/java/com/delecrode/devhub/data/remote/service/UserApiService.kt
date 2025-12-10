@@ -6,11 +6,11 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface GitApiService {
+interface UserApiService {
 
     @GET("users/{userName}")
     suspend fun getUser(@Path("userName") userName: String): Response<UserDto>
 
     @GET("users/{userName}/repos")
-    suspend fun getRepos(@Path("userName") userName: String) : Response<List<ReposDto>>
+    suspend fun getReposForUser(@Path("userName") userName: String) : Response<List<ReposDto>>
 }

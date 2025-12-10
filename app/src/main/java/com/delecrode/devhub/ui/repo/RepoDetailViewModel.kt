@@ -1,64 +1,57 @@
-package com.delecrode.devhub.ui.home
+package com.delecrode.devhub.ui.repo
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.delecrode.devhub.domain.model.Repos
-import com.delecrode.devhub.domain.repository.UserRepository
+import com.delecrode.devhub.domain.repository.RepoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val repository: UserRepository) : ViewModel() {
+class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeState())
-    val uiState: StateFlow<HomeState> = _uiState
+    private val _uiState = MutableStateFlow(RepoState())
+    val uiState: StateFlow<RepoState> = _uiState
 
-    fun getUser(userName: String) {
+    fun getRepoDetail(owner: String, repo: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 isLoading = true,
                 error = null
             )
             try {
-                val user = repository.getUser(userName)
+                val repoDetail = repository.getRepoDetail(owner, repo)
                 _uiState.value = _uiState.value.copy(
-                    user = user,
+                    repo = repoDetail,
                     isLoading = false
                 )
+
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Erro ao buscar usuário", e)
                 _uiState.value = _uiState.value.copy(
                     error = e.message,
-                    isLoading = false
+                    isLoading = false,
                 )
             }
         }
     }
 
-    fun getRepos(userName: String) {
+    fun getLanguagesForRepo(owner: String, repo: String){
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 isLoading = true,
                 error = null
             )
-            try {
-                val repos: List<Repos> = repository.getRepos(userName)
+            try{
+                val result = repository.getLanguagesRepo(owner, repo)
                 _uiState.value = _uiState.value.copy(
-                    repos = repos,
+                    languages = result.languages,
                     isLoading = false
                 )
-            } catch (e: Exception) {
-                Log.e("HomeViewModel", "Erro ao buscar repositórios", e)
-                _uiState.value = _uiState.value.copy(
-                    error = e.message,
-                    isLoading = false
-                )
+            }catch (e: Exception){
             }
         }
     }
 
-    fun clearStates(){
+    fun clearState(){
         _uiState.value = _uiState.value.copy(
             isLoading = false,
             error = null

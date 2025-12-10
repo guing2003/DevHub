@@ -53,6 +53,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.delecrode.devhub.R
+import com.delecrode.devhub.navigation.AppDestinations
 import com.delecrode.devhub.ui.theme.PrimaryBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -207,7 +208,8 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                                 modifier = Modifier.padding(8.dp),
                                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                                 colors = CardDefaults.cardColors(containerColor = Color.White),
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(8.dp),
+                                onClick = {navController.navigate(AppDestinations.RepoDetail.createRoute(user?.login ?: "", repo.name))}
                             ) {
                                 Row(
                                     modifier = Modifier

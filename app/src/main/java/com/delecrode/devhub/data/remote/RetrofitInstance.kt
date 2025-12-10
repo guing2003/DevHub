@@ -1,7 +1,8 @@
 package com.delecrode.devhub.data.remote
 
 import com.delecrode.devhub.BuildConfig
-import com.delecrode.devhub.data.remote.service.GitApiService
+import com.delecrode.devhub.data.remote.service.RepoApiService
+import com.delecrode.devhub.data.remote.service.UserApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,7 +29,11 @@ object RetrofitInstance {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val gitApi: GitApiService by lazy {
-        retrofit.create(GitApiService::class.java)
+    val userApi: UserApiService by lazy {
+        retrofit.create(UserApiService::class.java)
+    }
+
+    val repoApi: RepoApiService by lazy {
+        retrofit.create(RepoApiService::class.java)
     }
 }
