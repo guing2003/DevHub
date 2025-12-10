@@ -3,7 +3,6 @@ package com.delecrode.devhub.ui.repo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delecrode.devhub.domain.repository.RepoRepository
-import com.delecrode.devhub.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

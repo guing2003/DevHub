@@ -1,6 +1,5 @@
 package com.delecrode.devhub.domain.repository
 
-import com.delecrode.devhub.domain.model.RepoDetail
 import com.delecrode.devhub.domain.model.Repos
 import com.delecrode.devhub.domain.model.User
 
