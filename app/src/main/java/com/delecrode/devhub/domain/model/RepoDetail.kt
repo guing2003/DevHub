@@ -16,3 +16,8 @@ data class RepoDetail(
     val default_branch: String,
     val subscribers_count: Int
 )
+
+data class Languages(
+    val languages: List<String>
+)
+

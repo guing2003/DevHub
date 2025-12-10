@@ -31,3 +31,6 @@ data class RepoDetailDto(
     val default_branch: String,
     val subscribers_count: Int
 )
+
+
+class LanguagesDto : HashMap<String, Int>()

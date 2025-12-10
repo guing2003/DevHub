@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -62,6 +64,7 @@ fun RepoDetailScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getRepoDetail(owner, repo)
+        viewModel.getLanguagesForRepo(owner, repo)
     }
 
     LaunchedEffect(state.error) {
@@ -130,13 +133,20 @@ fun RepoDetailScreen(
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Linguagem: ${state.repo?.language}",
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+                    LazyRow {
+                        item {
+                            Text(
+                                "Linguagens: ",
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 18.sp,
+                            )
+                        }
+                        items(state.languages ?: emptyList()) { lang ->
+                            Text(text = " $lang ")
+                        }
+                    }
+
+
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Estrelas: ${state.repo?.subscribers_count}",
@@ -216,7 +226,6 @@ fun RepoDetailScreen(
 }
 
 
-
 fun formatIsoToBr(iso: String): String {
     if (iso.isBlank()) return ""
 
@@ -227,7 +236,6 @@ fun formatIsoToBr(iso: String): String {
         ""
     }
 }
-
 
 
 @Preview

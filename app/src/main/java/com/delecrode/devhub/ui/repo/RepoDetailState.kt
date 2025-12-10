@@ -5,5 +5,6 @@ import com.delecrode.devhub.domain.model.RepoDetail
 data class RepoState(
     val isLoading: Boolean = false,
     val error: String? = null,
-    val repo: RepoDetail? = null
+    val repo: RepoDetail? = null,
+    val languages: List<String>? = null
 )

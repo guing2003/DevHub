@@ -1,9 +1,18 @@
 package com.delecrode.devhub.data.mapper
 
+import com.delecrode.devhub.data.model.LanguagesDto
 import com.delecrode.devhub.data.model.RepoDetailDto
 import com.delecrode.devhub.data.model.ReposDto
+import com.delecrode.devhub.domain.model.Languages
 import com.delecrode.devhub.domain.model.RepoDetail
 import com.delecrode.devhub.domain.model.Repos
+fun LanguagesDto.toLanguagesDomain(): Languages {
+    return Languages(
+        languages = this.keys.toList()
+    )
+}
+
+
 
 fun ReposDto.toReposDomain(): Repos {
     return Repos(
@@ -38,5 +47,4 @@ fun RepoDetailDto.toRepoDetailDomain(): RepoDetail {
         default_branch = default_branch,
         subscribers_count = subscribers_count
     )
-
 }
