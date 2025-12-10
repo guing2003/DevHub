@@ -209,7 +209,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                                 colors = CardDefaults.cardColors(containerColor = Color.White),
                                 shape = RoundedCornerShape(8.dp),
-                                onClick = {navController.navigate(AppDestinations.RepoDetail.route)}
+                                onClick = {navController.navigate(AppDestinations.RepoDetail.createRoute(user?.login ?: "", repo.name))}
                             ) {
                                 Row(
                                     modifier = Modifier

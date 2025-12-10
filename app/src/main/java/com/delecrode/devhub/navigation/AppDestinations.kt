@@ -4,5 +4,7 @@ sealed class AppDestinations(val route: String) {
 
     object Home : AppDestinations("home")
 
-    object RepoDetail : AppDestinations("repoDetail")
+    object RepoDetail : AppDestinations("repoDetail/{owner}/{repo}"){
+        fun createRoute(owner: String, repo: String) = "repoDetail/$owner/$repo"
+    }
 }
