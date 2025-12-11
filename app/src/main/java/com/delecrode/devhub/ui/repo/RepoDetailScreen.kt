@@ -82,11 +82,12 @@ fun RepoDetailScreen(
                         text = "Detalhes do Repositorio",
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.background
                 ),
                 navigationIcon = {
                     IconButton(onClick = {
@@ -94,7 +95,8 @@ fun RepoDetailScreen(
                     }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Voltar"
+                            contentDescription = "Voltar",
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
@@ -139,10 +141,14 @@ fun RepoDetailScreen(
                                 "Linguagens: ",
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 18.sp,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         }
                         items(state.languages ?: emptyList()) { lang ->
-                            Text(text = " $lang ")
+                            Text(
+                                text = " $lang ",
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
                         }
                     }
 
