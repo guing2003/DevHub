@@ -64,7 +64,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
 
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess) {
-            navController.navigate(AppDestinations.Home.route) {
+            navController.navigate(AppDestinations.Home.createRoute(state.userUid ?: "")) {
                 popUpTo(AppDestinations.Login.route) { inclusive = true }
             }
         }

@@ -1,7 +1,9 @@
 package com.delecrode.devhub.di
 
-import com.delecrode.devhub.data.firebase.UserExtraData
-import com.delecrode.devhub.data.remote.RetrofitInstance
+import com.delecrode.devhub.data.local.dataStore.AuthLocalDataSource
+import com.delecrode.devhub.data.local.dataStore.AuthLocalDataSourceImpl
+import com.delecrode.devhub.data.remote.firebase.UserExtraData
+import com.delecrode.devhub.data.remote.webApi.instance.RetrofitInstance
 import com.delecrode.devhub.data.repository.AuthRepositoryImpl
 import com.delecrode.devhub.data.repository.RepoRepositoryImpl
 import com.delecrode.devhub.data.repository.UserRepositoryImpl
@@ -15,8 +17,8 @@ import com.delecrode.devhub.ui.register.RegisterViewModel
 import com.delecrode.devhub.ui.repo.RepoDetailViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import org.koin.dsl.module
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
 
 val appModule = module {
@@ -27,15 +29,14 @@ val appModule = module {
     single { RetrofitInstance.userApi }
     single { RetrofitInstance.repoApi }
 
+    single<AuthLocalDataSource> { AuthLocalDataSourceImpl(get()) }
 
-
-    // Seus data sources customizados
-    single { com.delecrode.devhub.data.firebase.FirebaseAuth(get()) }
+    single { com.delecrode.devhub.data.remote.firebase.FirebaseAuth(get()) }
     single { UserExtraData(get()) }
 
-    single<UserRepository> { UserRepositoryImpl(get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get()) }
     single<RepoRepository> { RepoRepositoryImpl(get()) }
-    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
 
     viewModel{ HomeViewModel(get()) }
     viewModel { RepoDetailViewModel(get()) }

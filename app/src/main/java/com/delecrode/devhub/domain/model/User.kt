@@ -2,7 +2,7 @@ package com.delecrode.devhub.domain.model
 
 
 //User for GitHub
-data class User(
+data class UserForGit(
     val login: String?,
     val avatar_url : String?,
     val url : String?,
@@ -16,7 +16,12 @@ data class User(
 data class RegisterUser(
     val fullName: String = "",
     val username: String = "",
-    val birthDate: String = "",
+    val email: String = ""
+)
+
+data class UserForFirebase(
+    val fullName: String = "",
+    val username: String = "",
     val email: String = ""
 )
 

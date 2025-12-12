@@ -1,5 +1,6 @@
 package com.delecrode.devhub.ui.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delecrode.devhub.domain.repository.AuthRepository
@@ -26,6 +27,7 @@ class AuthViewModel(
                     userUid = user.uid,
                     isLoading = false
                 )
+                Log.i("AuthViewModel", "signIn: Usuario Logado ${user.uid}")
             } catch (e: Exception) {
                 _state.value = AuthState(
                     error = e.message,

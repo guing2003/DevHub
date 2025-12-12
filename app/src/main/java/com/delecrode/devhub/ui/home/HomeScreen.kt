@@ -1,5 +1,6 @@
 package com.delecrode.devhub.ui.home
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -58,7 +59,7 @@ import com.delecrode.devhub.ui.theme.PrimaryBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
+fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel,) {
 
     val uiState = homeViewModel.uiState.collectAsState()
     val user = uiState.value.user

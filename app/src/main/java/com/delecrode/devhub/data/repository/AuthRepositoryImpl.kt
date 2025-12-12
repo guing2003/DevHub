@@ -1,7 +1,8 @@
 package com.delecrode.devhub.data.repository
 
-import com.delecrode.devhub.data.firebase.FirebaseAuth
-import com.delecrode.devhub.data.firebase.UserExtraData
+import com.delecrode.devhub.data.local.dataStore.AuthLocalDataSource
+import com.delecrode.devhub.data.remote.firebase.FirebaseAuth
+import com.delecrode.devhub.data.remote.firebase.UserExtraData
 import com.delecrode.devhub.domain.model.RegisterUser
 import com.delecrode.devhub.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -12,12 +13,14 @@ import com.google.firebase.auth.FirebaseUser
 
 class AuthRepositoryImpl(
     private val authDataSource: FirebaseAuth,
-    private val userExtraDataSource: UserExtraData
+    private val userExtraDataSource: UserExtraData,
+    private val authLocalDataSource: AuthLocalDataSource
 ) : AuthRepository {
 
     override suspend fun signIn(email: String, password: String): FirebaseUser {
         try {
             val response = authDataSource.signIn(email, password)
+            authLocalDataSource.saveUser(response?.uid ?: "")
             return response ?: throw Exception("Erro ao recuperar usuário após login")
         } catch (e: Exception) {
             val errorMessage = when (e) {

@@ -2,7 +2,7 @@ package com.delecrode.devhub.data.repository
 
 import com.delecrode.devhub.data.mapper.toLanguagesDomain
 import com.delecrode.devhub.data.mapper.toRepoDetailDomain
-import com.delecrode.devhub.data.remote.service.RepoApiService
+import com.delecrode.devhub.data.remote.webApi.service.RepoApiService
 import com.delecrode.devhub.domain.model.Languages
 import com.delecrode.devhub.domain.model.RepoDetail
 import com.delecrode.devhub.domain.repository.RepoRepository

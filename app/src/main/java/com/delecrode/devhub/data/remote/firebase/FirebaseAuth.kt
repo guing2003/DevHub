@@ -1,13 +1,13 @@
-package com.delecrode.devhub.data.firebase
+package com.delecrode.devhub.data.remote.firebase
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
-import com.google.firebase.auth.FirebaseAuth as GoogleFirebaseAuth
 
 class FirebaseAuth(
-    private val auth: GoogleFirebaseAuth
+    private val auth: FirebaseAuth
 ) {
 
     suspend fun signIn(email: String, password: String): FirebaseUser? {
@@ -17,7 +17,9 @@ class FirebaseAuth(
                     if (task.isSuccessful) {
                         cont.resume(task.result?.user)
                     } else {
-                        cont.resumeWithException(task.exception ?: Exception("Erro desconhecido ao fazer login"))
+                        cont.resumeWithException(
+                            task.exception ?: Exception("Erro desconhecido ao fazer login")
+                        )
                     }
                 }
         }
@@ -30,7 +32,9 @@ class FirebaseAuth(
                     if (task.isSuccessful) {
                         cont.resume(task.result?.user?.uid)
                     } else {
-                        cont.resumeWithException(task.exception ?: Exception("Erro desconhecido ao cadastrar"))
+                        cont.resumeWithException(
+                            task.exception ?: Exception("Erro desconhecido ao cadastrar")
+                        )
                     }
                 }
         }

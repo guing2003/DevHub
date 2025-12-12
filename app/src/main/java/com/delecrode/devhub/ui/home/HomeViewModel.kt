@@ -21,7 +21,7 @@ class HomeViewModel(private val repository: UserRepository) : ViewModel() {
                 error = null
             )
             try {
-                val user = repository.getUser(userName)
+                val user = repository.getUserForGitHub(userName)
                 _uiState.value = _uiState.value.copy(
                     user = user,
                     isLoading = false

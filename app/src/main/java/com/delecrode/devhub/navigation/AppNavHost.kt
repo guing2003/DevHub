@@ -38,7 +38,7 @@ fun AppNavHost(sessionViewModel: SessionViewModel) {
         startDestination = if (logged.value) AppDestinations.Home.route else AppDestinations.Login.route
     ) {
         //Home Flow
-        composable(AppDestinations.Home.route) {
+        composable(AppDestinations.Home.route){
             HomeScreen(navController, profileViewModel)
         }
 

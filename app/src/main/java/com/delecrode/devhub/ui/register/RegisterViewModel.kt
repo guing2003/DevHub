@@ -3,7 +3,6 @@ package com.delecrode.devhub.ui.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delecrode.devhub.domain.repository.AuthRepository
-import com.delecrode.devhub.ui.login.AuthState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
