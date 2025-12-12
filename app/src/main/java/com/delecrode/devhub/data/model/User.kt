@@ -1,6 +1,6 @@
 package com.delecrode.devhub.data.model
 
-data class UserDto(
+data class UserForGitDto(
     val login: String ?,
     val id: Int?,
     val node_id: String?,
@@ -34,4 +34,10 @@ data class UserDto(
     val following: Int?,
     val created_at: String?,
     val updated_at: String?
+)
+
+data class UserForFirebaseDto(
+    val fullName: String = "",
+    val username: String = "",
+    val email: String = ""
 )

@@ -1,0 +1,105 @@
+package com.delecrode.devhub.ui.forgot
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.delecrode.devhub.navigation.AppDestinations
+import com.delecrode.devhub.ui.components.EmailTextField
+import com.delecrode.devhub.ui.components.PrimaryButton
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ForgotPasswordScreen(navController: NavController) {
+
+    var email by remember { mutableStateOf("") }
+
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Recuperar Senha",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                ),
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Voltar",
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Column(modifier = Modifier.padding(padding)) {
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(
+                    "Digite seu e-mail cadastrado " +
+                            "\npara que possamos enviar um link " +
+                            "para que você possa criar uma nova senha",
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                EmailTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = "Email",
+                    imeAction = ImeAction.Done
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                PrimaryButton(
+                    text = "Enviar e-mail",
+                    onClick = { navController.navigate(AppDestinations.Login.route) },
+                    enabled = email.isNotBlank()
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ForgotPasswordScreenPreview() {
+    ForgotPasswordScreen(rememberNavController())
+}

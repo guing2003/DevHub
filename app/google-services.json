@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1059643006132",
+    "project_id": "devhub-4912b",
+    "storage_bucket": "devhub-4912b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059643006132:android:459aaa892b0f25fdf6cbe1",
+        "android_client_info": {
+          "package_name": "com.delecrode.devhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCclTzmPM0pdKLYQQJESqx0ZHdXJ7-vxdM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

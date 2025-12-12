@@ -1,4 +1,4 @@
-package com.delecrode.devhub.data.remote.service
+package com.delecrode.devhub.data.remote.webApi.service
 
 import com.delecrode.devhub.data.model.LanguagesDto
 import com.delecrode.devhub.data.model.RepoDetailDto

@@ -11,14 +11,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -61,18 +66,22 @@ import com.delecrode.devhub.ui.theme.PrimaryBlue
 fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
 
     val uiState = homeViewModel.uiState.collectAsState()
-    val user = uiState.value.user
+    val userForSearchGit = uiState.value.userForSearchGit
+    val userForGit = uiState.value.userForGit
+    val userForFirebase = uiState.value.userForFirebase
+
     val repos = uiState.value.repos
 
     var searchText by remember { mutableStateOf("") }
     var search by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
     LaunchedEffect(search) {
         if (search && searchText.isNotBlank()) {
             homeViewModel.getRepos(searchText)
-            homeViewModel.getUser(searchText)
+            homeViewModel.getUserForSearchGit(searchText)
             search = false
         }
     }
@@ -83,16 +92,89 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
             homeViewModel.clearStates()
         }
     }
+    LaunchedEffect(Unit) {
+        homeViewModel.getUserForFirebase()
+    }
+
+    LaunchedEffect(userForFirebase) {
+        val firebaseUser = userForFirebase
+        if (firebaseUser != null) {
+            homeViewModel.getUserForGit(firebaseUser.username)
+        }
+    }
+
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("DevHub") },
+                title = {
+                    Row {
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .background(Color.White)
+                        ) {
+                            AsyncImage(
+                                model = userForGit?.avatar_url ?: R.drawable.git_logo,
+                                contentDescription = "Foto de Perfil",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(CircleShape)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Column {
+                            Text(
+                                text = userForFirebase?.fullName ?: "",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                text = userForFirebase?.username ?: "",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Menu"
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Meu Perfil") },
+                            onClick = {
+                                expanded = false
+                                navController.navigate("profile")
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Sair") },
+                            onClick = {
+                                expanded = false
+                                homeViewModel.signOut()
+                                navController.navigate("login") {
+                                    popUpTo(0)
+                                }
+                            }
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 )
             )
         }
+
     )
     { padding ->
 
@@ -101,9 +183,11 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
                 OutlinedTextField(
                     value = searchText,
                     onValueChange = { searchText = it },
@@ -131,7 +215,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
             }
 
 
-            user.let { user ->
+            userForSearchGit.let { user ->
                 Column(
                     modifier = Modifier
                         .padding(8.dp),
@@ -209,7 +293,14 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                                 colors = CardDefaults.cardColors(containerColor = Color.White),
                                 shape = RoundedCornerShape(8.dp),
-                                onClick = {navController.navigate(AppDestinations.RepoDetail.createRoute(user?.login ?: "", repo.name))}
+                                onClick = {
+                                    navController.navigate(
+                                        AppDestinations.RepoDetail.createRoute(
+                                            user?.login ?: "",
+                                            repo.name
+                                        )
+                                    )
+                                }
                             ) {
                                 Row(
                                     modifier = Modifier

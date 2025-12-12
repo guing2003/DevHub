@@ -1,8 +1,8 @@
-package com.delecrode.devhub.data.remote
+package com.delecrode.devhub.data.remote.webApi.instance
 
 import com.delecrode.devhub.BuildConfig
-import com.delecrode.devhub.data.remote.service.RepoApiService
-import com.delecrode.devhub.data.remote.service.UserApiService
+import com.delecrode.devhub.data.remote.webApi.service.RepoApiService
+import com.delecrode.devhub.data.remote.webApi.service.UserApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
