@@ -38,17 +38,21 @@ class UserRepositoryImpl(private val userApi: UserApiService, private val userEx
         try {
             val uid = authLocalDataSource.getUID().first()
             Log.i("UserRepositoryImpl", "getUserForFirebase (UID Real): $uid")
-            
-            val response = userExtraData.getUser(uid ?: "")
-            if (response.exists()) {
-                val body = response.toObject(UserForFirebaseDto::class.java)?.toUserDomain()
-                if (body != null) {
-                    return body
-                } else {
-                    throw Exception("Resposta vazia do servidor")
+            if(uid != null){
+                val response = userExtraData.getUser(uid ?: "")
+                if (response.exists()) {
+                    val body = response.toObject(UserForFirebaseDto::class.java)?.toUserDomain()
+                    if (body != null) {
+                        return body
+                    } else {
+                        throw Exception("Resposta vazia do servidor")
+                    }
+                }else{
+                    throw Exception("Usuário não encontrado")
                 }
-            }else{
-                throw Exception("Usuário não encontrado")
+            }
+            else{
+                return UserForFirebase()
             }
         }catch (e: Exception){
             throw e

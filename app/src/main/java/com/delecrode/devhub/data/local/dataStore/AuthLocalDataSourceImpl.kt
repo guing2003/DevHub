@@ -16,16 +16,11 @@ class AuthLocalDataSourceImpl(private val context: Context) : AuthLocalDataSourc
         val UID_KEY = stringPreferencesKey("uid")
     }
 
-    override fun getUID(): Flow<String> = context.dataStore.data.map { prefs ->
-
-        val id = prefs[PreferencesKeys.UID_KEY]
-
-        if (id != null) {
-            return@map id
-        } else {
-            throw Exception("Falha ao buscar UID do usuario")
+    override fun getUID(): Flow<String?> =
+        context.dataStore.data.map { prefs ->
+            prefs[PreferencesKeys.UID_KEY]
         }
-    }
+
 
     override suspend fun saveUser(uid: String) {
         Log.i("AuthLocalDataSourceImpl", "saveUser: $uid")

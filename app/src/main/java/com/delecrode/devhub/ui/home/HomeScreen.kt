@@ -63,7 +63,7 @@ import com.delecrode.devhub.ui.theme.PrimaryBlue
 fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel,) {
 
     val uiState = homeViewModel.uiState.collectAsState()
-    val userForGit = uiState.value.userForGit
+    val userForGit = uiState.value.userForSearchGit
     val userForFirebase = uiState.value.userForFirebase
 
     val repos = uiState.value.repos
@@ -86,6 +86,9 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel,) {
             Toast.makeText(context, uiState.value.error, Toast.LENGTH_SHORT).show()
             homeViewModel.clearStates()
         }
+    }
+    LaunchedEffect(Unit) {
+        homeViewModel.getUserForFirebase()
     }
 
     Scaffold(

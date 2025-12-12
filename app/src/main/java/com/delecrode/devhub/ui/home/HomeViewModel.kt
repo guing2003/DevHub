@@ -23,7 +23,7 @@ class HomeViewModel(private val repository: UserRepository) : ViewModel() {
             try {
                 val user = repository.getUserForGitHub(userName)
                 _uiState.value = _uiState.value.copy(
-                    userForGit = user,
+                    userForSearchGit = user,
                     isLoading = false
                 )
             } catch (e: Exception) {
@@ -34,10 +34,6 @@ class HomeViewModel(private val repository: UserRepository) : ViewModel() {
                 )
             }
         }
-    }
-
-    init{
-        getUserForFirebase()
     }
 
     fun getUserForFirebase() {
