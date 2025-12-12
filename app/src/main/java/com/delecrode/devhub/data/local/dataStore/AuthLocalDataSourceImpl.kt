@@ -22,10 +22,16 @@ class AuthLocalDataSourceImpl(private val context: Context) : AuthLocalDataSourc
         }
 
 
-    override suspend fun saveUser(uid: String) {
+    override suspend fun saveUID(uid: String) {
         Log.i("AuthLocalDataSourceImpl", "saveUser: $uid")
         context.dataStore.edit { prefs ->
             prefs[PreferencesKeys.UID_KEY] = uid
+        }
+    }
+
+    override suspend fun clearUID() {
+        context.dataStore.edit { prefs ->
+            prefs.remove(PreferencesKeys.UID_KEY)
         }
     }
 }

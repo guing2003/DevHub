@@ -39,7 +39,7 @@ class UserRepositoryImpl(private val userApi: UserApiService, private val userEx
             val uid = authLocalDataSource.getUID().first()
             Log.i("UserRepositoryImpl", "getUserForFirebase (UID Real): $uid")
             if(uid != null){
-                val response = userExtraData.getUser(uid ?: "")
+                val response = userExtraData.getUser(uid)
                 if (response.exists()) {
                     val body = response.toObject(UserForFirebaseDto::class.java)?.toUserDomain()
                     if (body != null) {

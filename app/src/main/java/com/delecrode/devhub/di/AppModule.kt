@@ -38,7 +38,7 @@ val appModule = module {
     single<RepoRepository> { RepoRepositoryImpl(get()) }
     single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
 
-    viewModel{ HomeViewModel(get()) }
+    viewModel{ HomeViewModel(get(), get()) }
     viewModel { RepoDetailViewModel(get()) }
     viewModel { AuthViewModel(get()) }
     viewModel { SessionViewModel(get()) }

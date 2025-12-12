@@ -20,7 +20,7 @@ class AuthRepositoryImpl(
     override suspend fun signIn(email: String, password: String): FirebaseUser {
         try {
             val response = authDataSource.signIn(email, password)
-            authLocalDataSource.saveUser(response?.uid ?: "")
+            authLocalDataSource.saveUID(response?.uid ?: "")
             return response ?: throw Exception("Erro ao recuperar usuário após login")
         } catch (e: Exception) {
             val errorMessage = when (e) {
@@ -65,5 +65,6 @@ class AuthRepositoryImpl(
 
     override suspend fun signOut() {
         authDataSource.signOut()
+        authLocalDataSource.clearUID()
     }
 }
