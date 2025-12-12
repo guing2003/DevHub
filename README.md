@@ -25,7 +25,7 @@ O projeto utiliza as seguintes tecnologias:
 - **UI Toolkit**: [Jetpack Compose](https://developer.android.com/jetpack/compose)
 - **Arquitetura**: Clean Architecture + MVVM (Model-View-ViewModel)
 - **Injeção de Dependência**: Koin
-- **Networking**: Retrofit
+- **Networking**: Retrofit + OkHtpp
 - **Carregamento de Imagens**: [Coil](https://coil-kt.github.io/coil/)
 - **Armazenamento de dados**: DataStore(Shared Preferences) e Room Database
 - **Navegação**: Navigation Compose
