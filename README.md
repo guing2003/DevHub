@@ -11,6 +11,7 @@ O projeto está sendo construído seguindo as melhores práticas de desenvolvime
 - **Busca de Usuários**: Pesquise por desenvolvedores do GitHub.
 - **Perfil do Usuário**: Exibe foto, nome, username e bio.
 - **Lista de Repositórios**: Visualização dos repositórios públicos do usuário.
+- **Detalhes do Repositórios**: Visualização de informações públicas do repositório.
 - **Navegação Fluida**: Utilizando Navigation Compose.
 - **Carregamento de Imagens**: Integração com Coil para carregar avatares.
 
@@ -23,9 +24,10 @@ O projeto utiliza as seguintes tecnologias:
 - **Linguagem**: [Kotlin](https://kotlinlang.org/)
 - **UI Toolkit**: [Jetpack Compose](https://developer.android.com/jetpack/compose)
 - **Arquitetura**: Clean Architecture + MVVM (Model-View-ViewModel)
-- **Injeção de Dependência**: (Planejado: Hilt/Koin)
-- **Networking**: (Planejado: Retrofit)
+- **Injeção de Dependência**: Koin
+- **Networking**: Retrofit
 - **Carregamento de Imagens**: [Coil](https://coil-kt.github.io/coil/)
+- **Armazenamento de dados**: DataStore(Shared Preferences) e Room Database
 - **Navegação**: Navigation Compose
 - **Testes**: JUnit, Espresso (Planejado)
 - **CI/CD**: GitHub Actions (Pipelines de Integração Contínua)
@@ -36,7 +38,7 @@ O projeto utiliza as seguintes tecnologias:
 
 O projeto segue os princípios da **Clean Architecture**, dividido em camadas para garantir separação de responsabilidades, testabilidade e manutenção:
 
-1.  **Presentation (UI)**: Contém as Activities, Composables e ViewModels.
+1.  **Presentation (UI)**: Contém as Composables e ViewModels.
 2.  **Domain**: Contém as regras de negócio, Interfaces de Repositório. É independente de frameworks.
 3.  **Data**: Implementação dos Repositórios, Fontes de Dados (Data Sources - API/Local) e Mappers.
 
