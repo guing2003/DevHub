@@ -18,6 +18,6 @@ data class RepoDetail(
 )
 
 data class Languages(
-    val languages: List<String>
+    val languages: List<String>?
 )
 

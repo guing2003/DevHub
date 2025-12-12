@@ -28,22 +28,16 @@ class RepoRepositoryImpl(val repoApi: RepoApiService) : RepoRepository {
     }
 
     override suspend fun getLanguagesRepo(owner: String, repo: String) : Languages{
-        try {
+        return try {
             val response = repoApi.getRepoLanguages(owner, repo)
             if (response.isSuccessful) {
                 val body = response.body()
-                if (body != null) {
-                    return body.toLanguagesDomain()
-                }else{
-                    throw Exception("Resposta vazia do servidor")
-
-                }
-            }else{
-                throw Exception("Erro na requisição ${response.code()}")
+                body?.toLanguagesDomain() ?: Languages(emptyList())
+            } else {
+                Languages(emptyList())
             }
-
-        }catch (e: Exception){
-            throw e
+        } catch (e: Exception) {
+            Languages(emptyList())
         }
     }
 }

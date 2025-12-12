@@ -36,17 +36,15 @@ class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
 
     fun getLanguagesForRepo(owner: String, repo: String){
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                error = null
-            )
             try{
                 val result = repository.getLanguagesRepo(owner, repo)
                 _uiState.value = _uiState.value.copy(
-                    languages = result.languages,
-                    isLoading = false
+                    languages = result.languages
                 )
             }catch (e: Exception){
+                 _uiState.value = _uiState.value.copy(
+                    languages = emptyList()
+                )
             }
         }
     }
