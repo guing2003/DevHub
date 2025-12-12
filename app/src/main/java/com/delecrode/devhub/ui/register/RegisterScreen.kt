@@ -1,5 +1,6 @@
 package com.delecrode.devhub.ui.register
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,12 +20,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,10 +43,11 @@ import com.delecrode.devhub.ui.components.EmailTextField
 import com.delecrode.devhub.ui.components.GenericOutlinedTextField
 import com.delecrode.devhub.ui.components.PasswordTextField
 import com.delecrode.devhub.ui.components.PrimaryButton
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
 
     var userName by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -52,6 +57,23 @@ fun RegisterScreen(navController: NavController) {
 
     var passwordVisible by remember { mutableStateOf(false) }
     var passwordConfirmVisible by remember { mutableStateOf(false) }
+
+    val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
+
+
+    LaunchedEffect(state.error) {
+        if (state.error != null) {
+            Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
+            viewModel.clearState()
+        }
+    }
+
+    LaunchedEffect(state.isSuccess) {
+        if(state.isSuccess){
+            navController.navigate(AppDestinations.Login.route)
+        }
+    }
 
 
 
@@ -210,8 +232,12 @@ fun RegisterScreen(navController: NavController) {
                         PrimaryButton(
                             text = "Cadastrar",
                             onClick = {
-                                //authViewModel.login(email, password)
-                                navController.navigate(AppDestinations.Login.route)
+                                viewModel.signUp(
+                                    name = name,
+                                    username = userName,
+                                    email = email,
+                                    password = password
+                                )
                             },
                             enabled = email.isNotBlank() && password.isNotBlank() && password == confirmPassword
                         )
@@ -225,5 +251,5 @@ fun RegisterScreen(navController: NavController) {
 @Preview
 @Composable
 fun RegisterScreenPreview() {
-    RegisterScreen(rememberNavController())
+    RegisterScreen(rememberNavController(), koinViewModel())
 }
