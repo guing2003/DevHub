@@ -14,7 +14,7 @@ class HomeViewModel(private val repository: UserRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeState())
     val uiState: StateFlow<HomeState> = _uiState
 
-    fun getUser(userName: String) {
+    fun getUserForSearchGit(userName: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 isLoading = true,
@@ -23,7 +23,7 @@ class HomeViewModel(private val repository: UserRepository) : ViewModel() {
             try {
                 val user = repository.getUserForGitHub(userName)
                 _uiState.value = _uiState.value.copy(
-                    user = user,
+                    userForGit = user,
                     isLoading = false
                 )
             } catch (e: Exception) {
@@ -32,6 +32,29 @@ class HomeViewModel(private val repository: UserRepository) : ViewModel() {
                     error = e.message,
                     isLoading = false
                 )
+            }
+        }
+    }
+
+    init{
+        getUserForFirebase()
+    }
+
+    fun getUserForFirebase() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                error = null
+            )
+            try {
+                val user = repository.getUserForFirebase()
+                _uiState.value = _uiState.value.copy(
+                    userForFirebase = user,
+                    isLoading = false
+                )
+                Log.i("HomeViewModel", "getUserForFirebase: $user")
+            } catch (e: Exception) {
+                throw e
             }
         }
     }
@@ -58,7 +81,7 @@ class HomeViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    fun clearStates(){
+    fun clearStates() {
         _uiState.value = _uiState.value.copy(
             isLoading = false,
             error = null

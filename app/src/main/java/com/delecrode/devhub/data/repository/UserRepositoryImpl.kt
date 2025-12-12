@@ -1,16 +1,19 @@
 package com.delecrode.devhub.data.repository
 
 import android.util.Log
-import com.delecrode.devhub.data.remote.firebase.UserExtraData
+import com.delecrode.devhub.data.local.dataStore.AuthLocalDataSource
 import com.delecrode.devhub.data.mapper.toReposDomain
 import com.delecrode.devhub.data.mapper.toUserDomain
 import com.delecrode.devhub.data.model.UserForFirebaseDto
+import com.delecrode.devhub.data.remote.firebase.UserExtraData
 import com.delecrode.devhub.data.remote.webApi.service.UserApiService
 import com.delecrode.devhub.domain.model.Repos
+import com.delecrode.devhub.domain.model.UserForFirebase
 import com.delecrode.devhub.domain.model.UserForGit
 import com.delecrode.devhub.domain.repository.UserRepository
+import kotlinx.coroutines.flow.first
 
-class UserRepositoryImpl(private val userApi: UserApiService, private val userExtraData: UserExtraData) : UserRepository {
+class UserRepositoryImpl(private val userApi: UserApiService, private val userExtraData: UserExtraData, private val authLocalDataSource: AuthLocalDataSource) : UserRepository {
 
     override suspend fun getUserForGitHub(userName: String): UserForGit {
         try {
@@ -31,11 +34,14 @@ class UserRepositoryImpl(private val userApi: UserApiService, private val userEx
         }
     }
 
-    override suspend fun getUserForFirebase(uid: String): UserForFirebaseDto{
+    override suspend fun getUserForFirebase(): UserForFirebase {
         try {
-            val response = userExtraData.getUser(uid)
+            val uid = authLocalDataSource.getUID().first()
+            Log.i("UserRepositoryImpl", "getUserForFirebase (UID Real): $uid")
+            
+            val response = userExtraData.getUser(uid ?: "")
             if (response.exists()) {
-                val body = response.toObject(UserForFirebaseDto::class.java)
+                val body = response.toObject(UserForFirebaseDto::class.java)?.toUserDomain()
                 if (body != null) {
                     return body
                 } else {
@@ -67,4 +73,3 @@ class UserRepositoryImpl(private val userApi: UserApiService, private val userEx
         }
     }
 }
-

@@ -1,6 +1,5 @@
 package com.delecrode.devhub.ui.home
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,6 +15,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -62,7 +63,9 @@ import com.delecrode.devhub.ui.theme.PrimaryBlue
 fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel,) {
 
     val uiState = homeViewModel.uiState.collectAsState()
-    val user = uiState.value.user
+    val userForGit = uiState.value.userForGit
+    val userForFirebase = uiState.value.userForFirebase
+
     val repos = uiState.value.repos
 
     var searchText by remember { mutableStateOf("") }
@@ -73,7 +76,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel,) {
     LaunchedEffect(search) {
         if (search && searchText.isNotBlank()) {
             homeViewModel.getRepos(searchText)
-            homeViewModel.getUser(searchText)
+            homeViewModel.getUserForSearchGit(searchText)
             search = false
         }
     }
@@ -88,12 +91,33 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel,) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("DevHub") },
+                title = {
+                    Column {
+                        Text(
+                            text = userForFirebase?.fullName ?: "",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            text = userForFirebase?.username ?: "",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Menu"
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 )
             )
         }
+
     )
     { padding ->
 
@@ -132,7 +156,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel,) {
             }
 
 
-            user.let { user ->
+            userForGit.let { user ->
                 Column(
                     modifier = Modifier
                         .padding(8.dp),

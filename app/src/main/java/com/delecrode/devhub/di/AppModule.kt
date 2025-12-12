@@ -34,7 +34,7 @@ val appModule = module {
     single { com.delecrode.devhub.data.remote.firebase.FirebaseAuth(get()) }
     single { UserExtraData(get()) }
 
-    single<UserRepository> { UserRepositoryImpl(get(), get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get(), get()) }
     single<RepoRepository> { RepoRepositoryImpl(get()) }
     single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
 
