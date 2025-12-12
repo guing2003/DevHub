@@ -60,7 +60,6 @@ import coil.compose.AsyncImage
 import com.delecrode.devhub.R
 import com.delecrode.devhub.navigation.AppDestinations
 import com.delecrode.devhub.ui.theme.PrimaryBlue
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
