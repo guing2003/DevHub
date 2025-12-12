@@ -70,6 +70,7 @@ fun RepoDetailScreen(
     LaunchedEffect(state.error) {
         if (state.error != null) {
             Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
+            Log.i("RepoDetailScreen", "RepoDetailScreen: ${state.error}")
             viewModel.clearState()
         }
     }
