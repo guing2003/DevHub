@@ -6,5 +6,7 @@ interface AuthLocalDataSource {
     fun getUID(): Flow<String?>
     suspend fun saveUID(uid: String)
 
+    suspend fun saveName(name: String)
+
     suspend fun clearUID()
 }

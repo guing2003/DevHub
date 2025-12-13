@@ -13,7 +13,11 @@ import com.delecrode.devhub.domain.model.UserForGit
 import com.delecrode.devhub.domain.repository.UserRepository
 import kotlinx.coroutines.flow.first
 
-class UserRepositoryImpl(private val userApi: UserApiService, private val userExtraData: UserExtraData, private val authLocalDataSource: AuthLocalDataSource) : UserRepository {
+class UserRepositoryImpl(
+    private val userApi: UserApiService,
+    private val userExtraData: UserExtraData,
+    private val authLocalDataSource: AuthLocalDataSource
+) : UserRepository {
 
     override suspend fun getUserForGitHub(userName: String): UserForGit {
         try {
@@ -38,23 +42,26 @@ class UserRepositoryImpl(private val userApi: UserApiService, private val userEx
         try {
             val uid = authLocalDataSource.getUID().first()
             Log.i("UserRepositoryImpl", "getUserForFirebase (UID Real): $uid")
-            if(uid != null){
+            if (uid != null) {
                 val response = userExtraData.getUser(uid)
                 if (response.exists()) {
                     val body = response.toObject(UserForFirebaseDto::class.java)?.toUserDomain()
+                    val name = body?.username
+                    if (name != null) {
+                        authLocalDataSource.saveName(name)
+                    }
                     if (body != null) {
                         return body
                     } else {
                         throw Exception("Resposta vazia do servidor")
                     }
-                }else{
+                } else {
                     throw Exception("Usuário não encontrado")
                 }
-            }
-            else{
+            } else {
                 return UserForFirebase()
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             throw e
         }
     }

@@ -13,6 +13,7 @@ import com.delecrode.devhub.domain.repository.UserRepository
 import com.delecrode.devhub.domain.session.SessionViewModel
 import com.delecrode.devhub.ui.home.HomeViewModel
 import com.delecrode.devhub.ui.login.AuthViewModel
+import com.delecrode.devhub.ui.profile.ProfileViewModel
 import com.delecrode.devhub.ui.register.RegisterViewModel
 import com.delecrode.devhub.ui.repo.RepoDetailViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -38,10 +39,11 @@ val appModule = module {
     single<RepoRepository> { RepoRepositoryImpl(get()) }
     single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
 
-    viewModel{ HomeViewModel(get(), get()) }
+    viewModel { HomeViewModel(get(), get()) }
     viewModel { RepoDetailViewModel(get()) }
     viewModel { AuthViewModel(get()) }
     viewModel { SessionViewModel(get()) }
     viewModel { RegisterViewModel(get()) }
+    viewModel { ProfileViewModel(get(),get()) }
 
 }

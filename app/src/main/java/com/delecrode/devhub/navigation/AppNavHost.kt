@@ -13,6 +13,8 @@ import com.delecrode.devhub.ui.home.HomeScreen
 import com.delecrode.devhub.ui.home.HomeViewModel
 import com.delecrode.devhub.ui.login.AuthViewModel
 import com.delecrode.devhub.ui.login.LoginScreen
+import com.delecrode.devhub.ui.profile.ProfileScreen
+import com.delecrode.devhub.ui.profile.ProfileViewModel
 import com.delecrode.devhub.ui.register.RegisterScreen
 import com.delecrode.devhub.ui.register.RegisterViewModel
 import com.delecrode.devhub.ui.repo.RepoDetailScreen
@@ -24,13 +26,14 @@ import org.koin.androidx.compose.koinViewModel
 fun AppNavHost(sessionViewModel: SessionViewModel) {
 
     val navController = rememberNavController()
-    val profileViewModel: HomeViewModel = koinViewModel()
+    val homeViewModel: HomeViewModel = koinViewModel()
     val repoViewModel: RepoDetailViewModel = koinViewModel()
     val authViewModel: AuthViewModel = koinViewModel()
     val registerViewModel: RegisterViewModel = koinViewModel()
-
+    val profileViewModel: ProfileViewModel = koinViewModel()
 
     val logged = sessionViewModel.isLoggedIn.collectAsState()
+
 
 
     NavHost(
@@ -39,7 +42,7 @@ fun AppNavHost(sessionViewModel: SessionViewModel) {
     ) {
         //Home Flow
         composable(AppDestinations.Home.route){
-            HomeScreen(navController, profileViewModel)
+            HomeScreen(navController, homeViewModel)
         }
 
         //Repositorio Flow
@@ -70,5 +73,8 @@ fun AppNavHost(sessionViewModel: SessionViewModel) {
             ForgotPasswordScreen(navController)
         }
 
+        composable(AppDestinations.Profile.route){
+            ProfileScreen(navController, profileViewModel)
+        }
     }
 }
