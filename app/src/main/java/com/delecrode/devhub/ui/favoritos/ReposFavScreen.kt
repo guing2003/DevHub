@@ -1,5 +1,6 @@
 package com.delecrode.devhub.ui.favoritos
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -79,6 +80,8 @@ fun ReposFavScreen(navController: NavController, viewModel: RepoFavViewModel) {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(state.repoFav.size) { index ->
                     val repo = repos[index]
+
+                    Log.i("ReposFavScreen", "ReposFavScreen: ${repo.userName} e ${repo.name}")
                     Card(
                         modifier = Modifier.padding(8.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
