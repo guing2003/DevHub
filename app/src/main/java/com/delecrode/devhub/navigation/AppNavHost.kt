@@ -8,11 +8,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.delecrode.devhub.domain.session.SessionViewModel
+import com.delecrode.devhub.ui.favoritos.RepoFavViewModel
+import com.delecrode.devhub.ui.favoritos.ReposFavScreen
 import com.delecrode.devhub.ui.forgot.ForgotPasswordScreen
 import com.delecrode.devhub.ui.home.HomeScreen
 import com.delecrode.devhub.ui.home.HomeViewModel
 import com.delecrode.devhub.ui.login.AuthViewModel
 import com.delecrode.devhub.ui.login.LoginScreen
+import com.delecrode.devhub.ui.profile.ProfileScreen
+import com.delecrode.devhub.ui.profile.ProfileViewModel
 import com.delecrode.devhub.ui.register.RegisterScreen
 import com.delecrode.devhub.ui.register.RegisterViewModel
 import com.delecrode.devhub.ui.repo.RepoDetailScreen
@@ -24,13 +28,16 @@ import org.koin.androidx.compose.koinViewModel
 fun AppNavHost(sessionViewModel: SessionViewModel) {
 
     val navController = rememberNavController()
-    val profileViewModel: HomeViewModel = koinViewModel()
+    val homeViewModel: HomeViewModel = koinViewModel()
     val repoViewModel: RepoDetailViewModel = koinViewModel()
     val authViewModel: AuthViewModel = koinViewModel()
     val registerViewModel: RegisterViewModel = koinViewModel()
+    val profileViewModel: ProfileViewModel = koinViewModel()
+    val repoFavViewModel: RepoFavViewModel = koinViewModel()
 
 
     val logged = sessionViewModel.isLoggedIn.collectAsState()
+
 
 
     NavHost(
@@ -38,8 +45,8 @@ fun AppNavHost(sessionViewModel: SessionViewModel) {
         startDestination = if (logged.value) AppDestinations.Home.route else AppDestinations.Login.route
     ) {
         //Home Flow
-        composable(AppDestinations.Home.route){
-            HomeScreen(navController, profileViewModel)
+        composable(AppDestinations.Home.route) {
+            HomeScreen(navController, homeViewModel)
         }
 
         //Repositorio Flow
@@ -70,5 +77,12 @@ fun AppNavHost(sessionViewModel: SessionViewModel) {
             ForgotPasswordScreen(navController)
         }
 
+        composable(AppDestinations.Profile.route) {
+            ProfileScreen(navController, profileViewModel)
+        }
+
+        composable(AppDestinations.ReposFav.route) {
+            ReposFavScreen(navController, repoFavViewModel)
+        }
     }
 }

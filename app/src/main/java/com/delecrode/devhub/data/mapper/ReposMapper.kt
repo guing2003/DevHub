@@ -1,17 +1,39 @@
 package com.delecrode.devhub.data.mapper
 
-import com.delecrode.devhub.data.model.LanguagesDto
-import com.delecrode.devhub.data.model.RepoDetailDto
-import com.delecrode.devhub.data.model.ReposDto
+import com.delecrode.devhub.data.model.dto.LanguagesDto
+import com.delecrode.devhub.data.model.dto.RepoDetailDto
+import com.delecrode.devhub.data.model.dto.ReposDto
+import com.delecrode.devhub.data.model.entity.RepoEntity
 import com.delecrode.devhub.domain.model.Languages
 import com.delecrode.devhub.domain.model.RepoDetail
+import com.delecrode.devhub.domain.model.RepoFav
 import com.delecrode.devhub.domain.model.Repos
+
+
+//Repositorios favoritos
+fun RepoFav.toEntity(): RepoEntity =
+    RepoEntity(
+        id = id,
+        name = name,
+        userName = userName,
+        description = description,
+        url = url
+    )
+
+fun RepoEntity.toDomain(): RepoFav =
+    RepoFav(
+        id = id,
+        name = name,
+        userName = userName,
+        description = description,
+        url = url
+    )
+
 fun LanguagesDto.toLanguagesDomain(): Languages {
     return Languages(
         languages = this.keys.toList()
     )
 }
-
 
 
 fun ReposDto.toReposDomain(): Repos {
@@ -32,6 +54,7 @@ fun ReposDto.toReposDomain(): Repos {
 
 fun RepoDetailDto.toRepoDetailDomain(): RepoDetail {
     return RepoDetail(
+        id = id,
         name = name,
         html_url = html_url,
         description = description ?: "",

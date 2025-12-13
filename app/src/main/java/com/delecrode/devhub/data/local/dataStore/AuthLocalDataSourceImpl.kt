@@ -14,6 +14,7 @@ class AuthLocalDataSourceImpl(private val context: Context) : AuthLocalDataSourc
 
     private object PreferencesKeys {
         val UID_KEY = stringPreferencesKey("uid")
+        val NAME_KEY = stringPreferencesKey("name")
     }
 
     override fun getUID(): Flow<String?> =
@@ -21,11 +22,24 @@ class AuthLocalDataSourceImpl(private val context: Context) : AuthLocalDataSourc
             prefs[PreferencesKeys.UID_KEY]
         }
 
+    override fun getUserName(): Flow<String?> =
+        context.dataStore.data.map { prefs ->
+            prefs[PreferencesKeys.NAME_KEY]
+        }
+
 
     override suspend fun saveUID(uid: String) {
         Log.i("AuthLocalDataSourceImpl", "saveUser: $uid")
         context.dataStore.edit { prefs ->
             prefs[PreferencesKeys.UID_KEY] = uid
+        }
+
+    }
+
+    override suspend fun saveUserName(userName: String) {
+        Log.i("AuthLocalDataSourceImpl", "saveName: $userName")
+        context.dataStore.edit { prefs ->
+            prefs[PreferencesKeys.NAME_KEY] = userName
         }
     }
 

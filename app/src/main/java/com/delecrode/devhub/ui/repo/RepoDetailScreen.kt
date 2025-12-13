@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,6 +33,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,6 +62,8 @@ fun RepoDetailScreen(
     repo: String
 ) {
     Log.i("RepoDetailScreen", "RepoDetailScreen: $owner, $repo")
+
+    var isFavorite by remember { mutableStateOf(false) }
 
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -86,6 +93,32 @@ fun RepoDetailScreen(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
                     )
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            isFavorite = !isFavorite
+                            viewModel.favoriteRepo(
+                                id = state.repo?.id ?: 0,
+                                name = state.repo?.name ?: "",
+                                owner = owner,
+                                description = state.repo?.description ?: "",
+                                url = state.repo?.html_url ?: ""
+                            )
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (isFavorite)
+                                Icons.Filled.Favorite
+                            else
+                                Icons.Outlined.FavoriteBorder,
+                            contentDescription = "Favorito",
+                            tint = if (isFavorite)
+                                Color.Red
+                            else
+                                MaterialTheme.colorScheme.onBackground
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background

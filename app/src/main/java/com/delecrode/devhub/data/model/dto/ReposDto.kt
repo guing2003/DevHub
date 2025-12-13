@@ -1,4 +1,4 @@
-package com.delecrode.devhub.data.model
+package com.delecrode.devhub.data.model.dto
 
 data class ReposDto(
     val id: Int,
@@ -16,6 +16,7 @@ data class ReposDto(
 
 
 data class RepoDetailDto(
+    val id: Int,
     val name: String,
     val html_url: String,
     val description: String?,

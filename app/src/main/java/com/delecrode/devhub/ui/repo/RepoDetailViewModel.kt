@@ -2,6 +2,7 @@ package com.delecrode.devhub.ui.repo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.delecrode.devhub.domain.model.RepoFav
 import com.delecrode.devhub.domain.repository.RepoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -54,5 +55,20 @@ class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
             isLoading = false,
             error = null
         )
+    }
+
+
+    fun favoriteRepo(id: Int, owner: String, name: String, description: String, url: String) {
+        viewModelScope.launch {
+            repository.save(
+                RepoFav(
+                    id = id,
+                    name = name,
+                    userName = owner ?: "",
+                    description = description,
+                    url = url
+                )
+            )
+        }
     }
 }

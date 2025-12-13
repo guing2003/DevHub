@@ -13,3 +13,11 @@ data class Repos(
     val pushed_at: String,
     val clone_url: String
 )
+
+data class RepoFav(
+    val id: Int,
+    val name: String,
+    val userName: String,
+    val description: String,
+    val url: String,
+)
