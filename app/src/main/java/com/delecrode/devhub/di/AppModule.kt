@@ -4,7 +4,6 @@ import androidx.room.Room
 import com.delecrode.devhub.data.local.dataStore.AuthLocalDataSource
 import com.delecrode.devhub.data.local.dataStore.AuthLocalDataSourceImpl
 import com.delecrode.devhub.data.local.database.AppDatabase
-import com.delecrode.devhub.data.local.database.dao.RepoDao
 import com.delecrode.devhub.data.local.database.data.RepoLocalDataSource
 import com.delecrode.devhub.data.local.database.data.RepoLocalDataSourceImpl
 import com.delecrode.devhub.data.remote.firebase.UserExtraData

@@ -88,7 +88,7 @@ class ProfileViewModel(private val userRepository: UserRepository, private val a
             try {
                 authRepository.signOut()
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Erro ao fazer logout", e)
+                Log.e("ProfileViewModel", "Erro ao fazer logout", e)
                 _uiState.value = _uiState.value.copy(
                     error = e.message,
                     isLoading = false
@@ -103,5 +103,6 @@ class ProfileViewModel(private val userRepository: UserRepository, private val a
             error = null
         )
     }
+
 }
 

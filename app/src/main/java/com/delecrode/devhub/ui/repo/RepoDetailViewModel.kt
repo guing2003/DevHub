@@ -61,7 +61,6 @@ class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
 
     fun favoriteRepo(id: Int, owner: String, name: String, description: String, url: String) {
         viewModelScope.launch {
-            val userName = repository.getUserName().first()
             repository.save(
                 RepoFav(
                     id = id,

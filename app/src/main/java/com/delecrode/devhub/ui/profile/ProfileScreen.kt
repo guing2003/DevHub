@@ -120,7 +120,7 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
                             text = { Text("Sair") },
                             onClick = {
                                 expanded = false
-                                //homeViewModel.signOut()
+                                viewModel.signOut()
                                 navController.navigate("login") {
                                     popUpTo(0)
                                 }
