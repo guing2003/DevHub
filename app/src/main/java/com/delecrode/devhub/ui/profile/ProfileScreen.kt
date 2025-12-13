@@ -1,6 +1,5 @@
 package com.delecrode.devhub.ui.profile
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -68,10 +67,8 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
     val userName = state.value.userForFirebase.username
     val repos = state.value.repos
 
-    Log.i("ProfileScreen", "ProfileScreen: $userName")
     LaunchedEffect(Unit) {
-        viewModel.getUserForGit(userName)
-        viewModel.getRepos(userName)
+        viewModel.getUserForFirebase()
     }
 
     LaunchedEffect(state.value.error) {
@@ -121,7 +118,7 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
                             onClick = {
                                 expanded = false
                                 viewModel.signOut()
-                                navController.navigate("login") {
+                                navController.navigate(AppDestinations.Login.route) {
                                     popUpTo(0)
                                 }
                             }
