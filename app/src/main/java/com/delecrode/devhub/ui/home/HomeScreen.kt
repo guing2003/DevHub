@@ -154,7 +154,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                             text = { Text("Meu Perfil") },
                             onClick = {
                                 expanded = false
-                                navController.navigate("profile")
+                                navController.navigate(AppDestinations.Profile.route)
                             }
                         )
                         DropdownMenuItem(
@@ -162,7 +162,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                             onClick = {
                                 expanded = false
                                 homeViewModel.signOut()
-                                navController.navigate("login") {
+                                navController.navigate(AppDestinations.Profile.route) {
                                     popUpTo(0)
                                 }
                             }

@@ -28,9 +28,16 @@ class ProfileViewModel(private val userRepository: UserRepository, private val a
             try {
                 val userForFirebase = userRepository.getUserForFirebase()
                 _uiState.value = _uiState.value.copy(
-                    userForFirebase = userForFirebase,
-                    isLoading = false
+                    userForFirebase = userForFirebase
                 )
+
+                if (userForFirebase.username.isNotBlank()) {
+                    getUserForGit(userForFirebase.username)
+                    getRepos(userForFirebase.username)
+                } else {
+                    _uiState.value = _uiState.value.copy(isLoading = false)
+                }
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = e.message,
@@ -41,13 +48,9 @@ class ProfileViewModel(private val userRepository: UserRepository, private val a
     }
 
     fun getUserForGit(userName: String) {
-        _uiState.value = _uiState.value.copy(
-            isLoading = true
-        )
         viewModelScope.launch {
             try {
-                val userForGit =
-                    userRepository.getUserForGitHub(userName)
+                val userForGit = userRepository.getUserForGitHub(userName)
                 _uiState.value = _uiState.value.copy(
                     userForGit = userForGit,
                     isLoading = false
@@ -63,10 +66,6 @@ class ProfileViewModel(private val userRepository: UserRepository, private val a
 
     fun getRepos(userName: String) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                error = null
-            )
             try {
                 val repos: List<Repos> = userRepository.getRepos(userName)
                 _uiState.value = _uiState.value.copy(
@@ -105,4 +104,3 @@ class ProfileViewModel(private val userRepository: UserRepository, private val a
     }
 
 }
-
