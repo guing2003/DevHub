@@ -6,7 +6,6 @@ import com.delecrode.devhub.domain.model.RepoFav
 import com.delecrode.devhub.domain.repository.RepoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
