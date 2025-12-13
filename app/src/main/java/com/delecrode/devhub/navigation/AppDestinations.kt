@@ -14,5 +14,7 @@ sealed class AppDestinations(val route: String) {
     object ForgotPassword: AppDestinations("forgotPassword")
 
     object Profile: AppDestinations("profile")
+    object ReposFav: AppDestinations("reposFav")
+
 
 }

@@ -110,10 +110,10 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
                         onDismissRequest = { expanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Meu Perfil") },
+                            text = { Text("Favoritos") },
                             onClick = {
                                 expanded = false
-                                navController.navigate("profile")
+                                navController.navigate(AppDestinations.ReposFav.route)
                             }
                         )
                         DropdownMenuItem(

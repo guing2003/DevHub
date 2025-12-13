@@ -4,7 +4,7 @@ import android.util.Log
 import com.delecrode.devhub.data.local.dataStore.AuthLocalDataSource
 import com.delecrode.devhub.data.mapper.toReposDomain
 import com.delecrode.devhub.data.mapper.toUserDomain
-import com.delecrode.devhub.data.model.UserForFirebaseDto
+import com.delecrode.devhub.data.model.dto.UserForFirebaseDto
 import com.delecrode.devhub.data.remote.firebase.UserExtraData
 import com.delecrode.devhub.data.remote.webApi.service.UserApiService
 import com.delecrode.devhub.domain.model.Repos
@@ -46,9 +46,9 @@ class UserRepositoryImpl(
                 val response = userExtraData.getUser(uid)
                 if (response.exists()) {
                     val body = response.toObject(UserForFirebaseDto::class.java)?.toUserDomain()
-                    val name = body?.username
-                    if (name != null) {
-                        authLocalDataSource.saveName(name)
+                    val userName = body?.username
+                    if (userName != null) {
+                        authLocalDataSource.saveUserName(userName)
                     }
                     if (body != null) {
                         return body

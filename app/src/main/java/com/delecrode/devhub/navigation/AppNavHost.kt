@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.delecrode.devhub.domain.session.SessionViewModel
+import com.delecrode.devhub.ui.favoritos.RepoFavViewModel
+import com.delecrode.devhub.ui.favoritos.ReposFavScreen
 import com.delecrode.devhub.ui.forgot.ForgotPasswordScreen
 import com.delecrode.devhub.ui.home.HomeScreen
 import com.delecrode.devhub.ui.home.HomeViewModel
@@ -31,6 +33,8 @@ fun AppNavHost(sessionViewModel: SessionViewModel) {
     val authViewModel: AuthViewModel = koinViewModel()
     val registerViewModel: RegisterViewModel = koinViewModel()
     val profileViewModel: ProfileViewModel = koinViewModel()
+    val repoFavViewModel: RepoFavViewModel = koinViewModel()
+
 
     val logged = sessionViewModel.isLoggedIn.collectAsState()
 
@@ -41,7 +45,7 @@ fun AppNavHost(sessionViewModel: SessionViewModel) {
         startDestination = if (logged.value) AppDestinations.Home.route else AppDestinations.Login.route
     ) {
         //Home Flow
-        composable(AppDestinations.Home.route){
+        composable(AppDestinations.Home.route) {
             HomeScreen(navController, homeViewModel)
         }
 
@@ -73,8 +77,12 @@ fun AppNavHost(sessionViewModel: SessionViewModel) {
             ForgotPasswordScreen(navController)
         }
 
-        composable(AppDestinations.Profile.route){
+        composable(AppDestinations.Profile.route) {
             ProfileScreen(navController, profileViewModel)
+        }
+
+        composable(AppDestinations.ReposFav.route) {
+            ReposFavScreen(navController, repoFavViewModel)
         }
     }
 }

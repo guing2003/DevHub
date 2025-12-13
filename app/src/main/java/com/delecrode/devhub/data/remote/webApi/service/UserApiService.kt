@@ -1,7 +1,7 @@
 package com.delecrode.devhub.data.remote.webApi.service
 
-import com.delecrode.devhub.data.model.ReposDto
-import com.delecrode.devhub.data.model.UserForGitDto
+import com.delecrode.devhub.data.model.dto.ReposDto
+import com.delecrode.devhub.data.model.dto.UserForGitDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

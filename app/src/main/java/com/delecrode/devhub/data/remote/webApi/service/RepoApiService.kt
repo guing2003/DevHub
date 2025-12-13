@@ -1,7 +1,7 @@
 package com.delecrode.devhub.data.remote.webApi.service
 
-import com.delecrode.devhub.data.model.LanguagesDto
-import com.delecrode.devhub.data.model.RepoDetailDto
+import com.delecrode.devhub.data.model.dto.LanguagesDto
+import com.delecrode.devhub.data.model.dto.RepoDetailDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

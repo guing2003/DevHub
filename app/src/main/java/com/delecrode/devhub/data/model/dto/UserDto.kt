@@ -1,4 +1,4 @@
-package com.delecrode.devhub.data.model
+package com.delecrode.devhub.data.model.dto
 
 data class UserForGitDto(
     val login: String ?,

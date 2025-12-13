@@ -4,9 +4,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthLocalDataSource {
     fun getUID(): Flow<String?>
+    fun getUserName(): Flow<String?>
     suspend fun saveUID(uid: String)
 
-    suspend fun saveName(name: String)
+    suspend fun saveUserName(name: String)
 
     suspend fun clearUID()
 }
