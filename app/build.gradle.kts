@@ -17,7 +17,7 @@ android {
         minSdk = 30
         targetSdk = 36
         versionCode = 6
-        versionName = "1.0.6"
+        versionName = "1.0.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -95,4 +95,21 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+}
+
+android.applicationVariants.all {
+    if (buildType.name == "release") {
+        outputs.all {
+            val outputFile = this.outputFile
+            val copyTaskName = "copy${name.capitalize()}Apk"
+
+            tasks.register<Copy>(copyTaskName) {
+                from(outputFile)
+                into("${rootProject.projectDir}/app/release")
+                rename { "app-release.apk" }
+            }
+
+            assembleProvider.get().finalizedBy(copyTaskName)
+        }
+    }
 }
