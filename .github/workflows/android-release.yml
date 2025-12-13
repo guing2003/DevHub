@@ -5,6 +5,9 @@ on:
     tags:
       - "v*"
 
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -30,11 +33,14 @@ jobs:
       - name: Build Release APK
         run: ./gradlew assembleRelease
 
+      - name: List APK outputs
+        run: ls -R app/build/outputs/apk
+
       - name: Create GitHub Release and Upload APK
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          files: app/build/outputs/apk/release/app-release.apk
+          files: app/release/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
