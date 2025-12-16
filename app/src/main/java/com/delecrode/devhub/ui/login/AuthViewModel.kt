@@ -1,9 +1,9 @@
 package com.delecrode.devhub.ui.login
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delecrode.devhub.domain.repository.AuthRepository
+import com.delecrode.devhub.utils.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -20,19 +20,13 @@ class AuthViewModel(
         viewModelScope.launch {
             _state.value = AuthState(isLoading = true)
 
-            try {
-                val user = repository.signIn(email, password)
-                _state.value = AuthState(
-                    isSuccess = true,
-                    userUid = user.uid,
-                    isLoading = false
-                )
-                Log.i("AuthViewModel", "signIn: Usuario Logado ${user.uid}")
-            } catch (e: Exception) {
-                _state.value = AuthState(
-                    error = e.message,
-                    isLoading = false
-                )
+           when (val result = repository.signIn(email, password)) {
+                is Result.Success -> {
+                    _state.value = AuthState(isSuccess = true)
+                }
+                is Result.Error-> {
+                    _state.value = AuthState(error = result.message)
+                }
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.delecrode.devhub.data.repository
 
-import android.util.Log
 import com.delecrode.devhub.data.local.dataStore.AuthLocalDataSource
 import com.delecrode.devhub.data.mapper.toReposDomain
 import com.delecrode.devhub.data.mapper.toUserFirebaseDomain
