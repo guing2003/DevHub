@@ -76,7 +76,7 @@ class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
                 RepoFav(
                     id = id,
                     name = name,
-                    userName = owner ?: "",
+                    userName = owner,
                     description = description,
                     url = url
                 )

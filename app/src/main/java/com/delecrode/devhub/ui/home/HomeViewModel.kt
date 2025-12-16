@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.delecrode.devhub.domain.model.Repos
 import com.delecrode.devhub.domain.repository.AuthRepository
 import com.delecrode.devhub.domain.repository.UserRepository
+import com.delecrode.devhub.utils.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -25,18 +26,21 @@ class HomeViewModel(
                 isLoading = true,
                 error = null
             )
-            try {
-                val user = userRepository.getUserForGitHub(userName)
-                _uiState.value = _uiState.value.copy(
-                    userForSearchGit = user,
-                    isLoading = false
-                )
-            } catch (e: Exception) {
-                Log.e("HomeViewModel", "Erro ao buscar usuário", e)
-                _uiState.value = _uiState.value.copy(
-                    error = e.message,
-                    isLoading = false
-                )
+            when (val result = userRepository.getUserForGitHub(userName)) {
+                is Result.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        userForGit = result.data,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = result.message
+                    )
+                }
             }
         }
     }
@@ -47,18 +51,21 @@ class HomeViewModel(
                 isLoading = true,
                 error = null
             )
-            try {
-                val user = userRepository.getUserForGitHub(userName)
-                _uiState.value = _uiState.value.copy(
-                    userForGit = user,
-                    isLoading = false
-                )
-            } catch (e: Exception) {
-                Log.e("HomeViewModel", "Erro ao buscar usuário", e)
-                _uiState.value = _uiState.value.copy(
-                    error = e.message,
-                    isLoading = false
-                )
+            when (val result = userRepository.getUserForGitHub(userName)) {
+                is Result.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        userForGit = result.data,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = result.message
+                    )
+                }
             }
         }
     }
@@ -69,16 +76,23 @@ class HomeViewModel(
                 isLoading = true,
                 error = null
             )
-            try {
-                val user = userRepository.getUserForFirebase()
-                _uiState.value = _uiState.value.copy(
-                    userForFirebase = user,
-                    isLoading = false
-                )
-                Log.i("HomeViewModel", "getUserForFirebase: $user")
-            } catch (e: Exception) {
-                throw e
+            when (val result = userRepository.getUserForFirebase()) {
+                is Result.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        userForFirebase = result.data,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = result.message
+                    )
+                }
             }
+
         }
     }
 
@@ -88,40 +102,44 @@ class HomeViewModel(
                 isLoading = true,
                 error = null
             )
-            try {
-                val repos: List<Repos> = userRepository.getRepos(userName)
-                _uiState.value = _uiState.value.copy(
-                    repos = repos,
-                    isLoading = false
-                )
-            } catch (e: Exception) {
-                Log.e("HomeViewModel", "Erro ao buscar repositórios", e)
-                _uiState.value = _uiState.value.copy(
-                    error = e.message,
-                    isLoading = false
-                )
+            when (val result = userRepository.getRepos(userName)) {
+                is Result.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        repos = result.data,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = result.message
+                    )
+                }
             }
         }
     }
 
-    fun signOut() {
-        viewModelScope.launch {
-            try {
-                authRepository.signOut()
-            } catch (e: Exception) {
-                Log.e("HomeViewModel", "Erro ao fazer logout", e)
-                _uiState.value = _uiState.value.copy(
-                    error = e.message,
-                    isLoading = false
-                )
+        fun signOut() {
+            viewModelScope.launch {
+                try {
+                    authRepository.signOut()
+                } catch (e: Exception) {
+                    Log.e("HomeViewModel", "Erro ao fazer logout", e)
+                    _uiState.value = _uiState.value.copy(
+                        error = e.message,
+                        isLoading = false
+                    )
+                }
             }
+        }
+
+        fun clearStates() {
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                error = null
+            )
         }
     }
 
-    fun clearStates() {
-        _uiState.value = _uiState.value.copy(
-            isLoading = false,
-            error = null
-        )
-    }
-}

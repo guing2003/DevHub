@@ -5,7 +5,7 @@ import com.delecrode.devhub.data.model.dto.UserForGitDto
 import com.delecrode.devhub.domain.model.UserForFirebase
 import com.delecrode.devhub.domain.model.UserForGit
 
-fun UserForGitDto.toUserDomain(): UserForGit {
+fun UserForGitDto.toUserGitDomain(): UserForGit {
     return UserForGit(
         login = login,
         avatar_url = avatar_url,
@@ -17,7 +17,7 @@ fun UserForGitDto.toUserDomain(): UserForGit {
 }
 
 
-fun UserForFirebaseDto.toUserDomain(): UserForFirebase{
+fun UserForFirebaseDto.toUserFirebaseDomain(): UserForFirebase{
     return UserForFirebase(
         fullName = fullName,
         username = username,
