@@ -125,6 +125,7 @@ fun RepoDetailScreen(
                 ),
                 navigationIcon = {
                     IconButton(onClick = {
+                        viewModel.clearState()
                         navController.popBackStack()
                     }) {
                         Icon(
@@ -178,11 +179,13 @@ fun RepoDetailScreen(
                                 color = MaterialTheme.colorScheme.onBackground
                             )
                         }
-                        items(state.languages ?: emptyList()) { lang ->
-                            Text(
-                                text = " $lang ",
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
+                        state.languages.let {
+                            items(state.languages ?: emptyList()) { lang ->
+                                Text(
+                                    text = " $lang ",
+                                    color = MaterialTheme.colorScheme.onBackground
+                                )
+                            }
                         }
                     }
 

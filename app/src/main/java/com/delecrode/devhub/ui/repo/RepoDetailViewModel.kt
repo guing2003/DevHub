@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delecrode.devhub.domain.model.RepoFav
 import com.delecrode.devhub.domain.repository.RepoRepository
+import com.delecrode.devhub.utils.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -19,39 +20,50 @@ class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
                 isLoading = true,
                 error = null
             )
-            try {
-                val repoDetail = repository.getRepoDetail(owner, repo)
-                _uiState.value = _uiState.value.copy(
-                    repo = repoDetail,
-                    isLoading = false
-                )
+            when (val result = repository.getRepoDetail(owner, repo)) {
+                is Result.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        repo = result.data,
+                        isLoading = false,
+                        error = null
+                    )
+                }
 
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    error = e.message,
-                    isLoading = false,
-                )
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = result.message
+                    )
+                }
             }
         }
     }
 
-    fun getLanguagesForRepo(owner: String, repo: String){
+    fun getLanguagesForRepo(owner: String, repo: String) {
         viewModelScope.launch {
-            try{
-                val result = repository.getLanguagesRepo(owner, repo)
-                _uiState.value = _uiState.value.copy(
-                    languages = result.languages
-                )
-            }catch (e: Exception){
-                 _uiState.value = _uiState.value.copy(
-                    languages = emptyList()
-                )
+            when (val result = repository.getLanguagesRepo(owner, repo)) {
+                is Result.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        languages = result.data.languages,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = result.message
+                    )
+                }
             }
         }
     }
 
-    fun clearState(){
+    fun clearState() {
         _uiState.value = _uiState.value.copy(
+            repo = null,
+            languages = emptyList(),
             isLoading = false,
             error = null
         )
