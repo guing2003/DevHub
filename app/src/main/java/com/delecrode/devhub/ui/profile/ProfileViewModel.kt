@@ -19,9 +19,6 @@ class ProfileViewModel(
     private val _uiState = MutableStateFlow(ProfileState())
     val uiState: StateFlow<ProfileState> = _uiState
 
-    init {
-        getUserForFirebase()
-    }
 
     fun getUserForFirebase() {
         _uiState.value = _uiState.value.copy(

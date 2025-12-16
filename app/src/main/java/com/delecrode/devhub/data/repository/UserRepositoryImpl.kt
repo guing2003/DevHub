@@ -40,7 +40,10 @@ class UserRepositoryImpl(
     override suspend fun getUserForFirebase(): Result<UserForFirebase> {
         return try {
             val uid = authLocalDataSource.getUID().first()
-                ?: return Result.Error("Usuário não autenticado")
+            
+            if (uid.isNullOrBlank()) {
+                return Result.Error("Usuário não autenticado")
+            }
 
             val snapshot = userExtraData.getUser(uid)
 
