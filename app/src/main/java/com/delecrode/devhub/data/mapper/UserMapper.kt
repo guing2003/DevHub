@@ -1,6 +1,5 @@
 package com.delecrode.devhub.data.mapper
 
-import com.delecrode.devhub.data.model.dto.UserAuthDto
 import com.delecrode.devhub.data.model.dto.UserForFirebaseDto
 import com.delecrode.devhub.data.model.dto.UserForGitDto
 import com.delecrode.devhub.domain.model.UserAuth

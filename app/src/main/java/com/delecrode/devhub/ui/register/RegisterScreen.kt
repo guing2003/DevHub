@@ -239,7 +239,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
                                     password = password
                                 )
                             },
-                            enabled = email.isNotBlank() && password.isNotBlank() && password == confirmPassword
+                            enabled = email.isNotBlank() && password.isNotBlank() && password == confirmPassword && password.length >= 6
                         )
                     }
                 }

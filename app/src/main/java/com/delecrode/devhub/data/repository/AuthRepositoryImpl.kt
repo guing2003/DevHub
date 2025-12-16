@@ -7,9 +7,6 @@ import com.delecrode.devhub.data.remote.firebase.UserExtraData
 import com.delecrode.devhub.domain.model.RegisterUser
 import com.delecrode.devhub.domain.model.UserAuth
 import com.delecrode.devhub.domain.repository.AuthRepository
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.delecrode.devhub.utils.Result
 import com.delecrode.devhub.utils.mapAuthError
 import com.delecrode.devhub.utils.mapSignUpError
