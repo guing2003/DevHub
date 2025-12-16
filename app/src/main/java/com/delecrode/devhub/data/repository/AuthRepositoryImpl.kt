@@ -59,6 +59,16 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun forgotPassword(email: String): Result<Unit> {
+        return try {
+            authDataSource.forgotPassword(email)
+            Result.Success(Unit)
+
+        } catch (e: Exception) {
+            Result.Error(mapAuthError(e))
+        }
+    }
+
 
     override suspend fun signOut() {
         authDataSource.signOut()

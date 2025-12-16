@@ -1,5 +1,6 @@
 package com.delecrode.devhub.data.remote.firebase
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlin.coroutines.resume
@@ -43,4 +44,21 @@ class FirebaseAuth(
     fun signOut() {
         auth.signOut()
     }
+
+    suspend fun forgotPassword(email: String) {
+        Log.i("ForgotPasswordScreen", "forgotPassword: $email")
+        suspendCoroutine<Unit> { cont ->
+            auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        cont.resume(Unit)
+                    } else {
+                        cont.resumeWithException(
+                            task.exception ?: Exception("Erro ao enviar e-mail de recuperação")
+                        )
+                    }
+                }
+        }
+    }
+
 }

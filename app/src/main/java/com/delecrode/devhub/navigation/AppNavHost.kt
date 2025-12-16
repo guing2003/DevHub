@@ -11,6 +11,7 @@ import com.delecrode.devhub.domain.session.SessionViewModel
 import com.delecrode.devhub.ui.favoritos.RepoFavViewModel
 import com.delecrode.devhub.ui.favoritos.ReposFavScreen
 import com.delecrode.devhub.ui.forgot.ForgotPasswordScreen
+import com.delecrode.devhub.ui.forgot.ForgotPasswordViewModel
 import com.delecrode.devhub.ui.home.HomeScreen
 import com.delecrode.devhub.ui.home.HomeViewModel
 import com.delecrode.devhub.ui.login.AuthViewModel
@@ -34,6 +35,8 @@ fun AppNavHost(sessionViewModel: SessionViewModel) {
     val registerViewModel: RegisterViewModel = koinViewModel()
     val profileViewModel: ProfileViewModel = koinViewModel()
     val repoFavViewModel: RepoFavViewModel = koinViewModel()
+    val forgotPasswordViewModel: ForgotPasswordViewModel = koinViewModel()
+
 
 
     val logged = sessionViewModel.isLoggedIn.collectAsState()
@@ -74,7 +77,7 @@ fun AppNavHost(sessionViewModel: SessionViewModel) {
 
         //Forgot Password Flow
         composable(AppDestinations.ForgotPassword.route) {
-            ForgotPasswordScreen(navController)
+            ForgotPasswordScreen(navController, forgotPasswordViewModel)
         }
 
         composable(AppDestinations.Profile.route) {
