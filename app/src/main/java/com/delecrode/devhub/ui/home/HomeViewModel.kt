@@ -8,6 +8,7 @@ import com.delecrode.devhub.domain.repository.UserRepository
 import com.delecrode.devhub.utils.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -19,6 +20,21 @@ class HomeViewModel(
     private val _uiState = MutableStateFlow(HomeState())
     val uiState: StateFlow<HomeState> = _uiState
 
+    fun onSearchTextChange(value: String) {
+        _uiState.update {
+            it.copy(searchText = value)
+        }
+    }
+
+    fun onSearchClick() {
+        val search = uiState.value.searchText
+        if (search.isBlank()) return
+
+        getRepos(search)
+        getUserForSearchGit(search)
+    }
+
+
     fun getUserForSearchGit(userName: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
@@ -28,7 +44,7 @@ class HomeViewModel(
             when (val result = userRepository.getUserForGitHub(userName)) {
                 is Result.Success -> {
                     _uiState.value = _uiState.value.copy(
-                        userForGit = result.data,
+                        userForSearchGit = result.data,
                         isLoading = false,
                         error = null
                     )

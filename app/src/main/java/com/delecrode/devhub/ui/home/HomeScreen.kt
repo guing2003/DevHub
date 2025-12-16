@@ -72,19 +72,9 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
 
     val repos = uiState.value.repos
 
-    var searchText by remember { mutableStateOf("") }
-    var search by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
-
-    LaunchedEffect(search) {
-        if (search && searchText.isNotBlank()) {
-            homeViewModel.getRepos(searchText)
-            homeViewModel.getUserForSearchGit(searchText)
-            search = false
-        }
-    }
 
     LaunchedEffect(uiState.value.error) {
         if (uiState.value.error != null) {
@@ -155,6 +145,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                             onClick = {
                                 expanded = false
                                 navController.navigate(AppDestinations.Profile.route)
+                                homeViewModel.clearStates()
                             }
                         )
                         DropdownMenuItem(
@@ -165,6 +156,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                                 navController.navigate(AppDestinations.Profile.route) {
                                     popUpTo(0)
                                 }
+                                homeViewModel.clearStates()
                             }
                         )
                     }
@@ -189,8 +181,10 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                     .padding(8.dp)
             ) {
                 OutlinedTextField(
-                    value = searchText,
-                    onValueChange = { searchText = it },
+                    value = uiState.value.searchText,
+                    onValueChange = { value ->
+                        homeViewModel.onSearchTextChange(value)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(end = 16.dp),
@@ -203,7 +197,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                         unfocusedBorderColor = Color.Gray
                     ),
                     trailingIcon = {
-                        IconButton(onClick = { search = true }) {
+                        IconButton(onClick = { homeViewModel.onSearchClick() }) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_search_24),
                                 contentDescription = "Search",
