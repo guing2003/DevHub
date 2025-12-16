@@ -71,6 +71,18 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
         }
     }
 
+    LaunchedEffect(email) {
+        if (state.emailError != null) {
+            viewModel.clearEmailError()
+        }
+    }
+
+    LaunchedEffect(password) {
+        if (state.passwordError != null) {
+            viewModel.clearPasswordError()
+        }
+    }
+
 
     Scaffold(
         topBar = {
@@ -111,8 +123,8 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
                     value = email,
                     onValueChange = { email = it },
                     imeAction = ImeAction.Next,
-                    //isError = uiState.emailError != null,
-                    //errorMessage = uiState.emailError ?: ""
+                    isError = state.emailError != null,
+                    errorMessage = state.emailError ?: ""
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -132,8 +144,8 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
                     imeAction = ImeAction.Done,
                     isPasswordVisible = passwordVisible,
                     onVisibilityChange = { passwordVisible = !passwordVisible },
-                    //isError = uiState.passwordError != null,
-                    //errorMessage = uiState.passwordError ?: ""
+                    isError = state.passwordError != null,
+                    errorMessage = state.passwordError ?: ""
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -156,7 +168,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
                     onClick = {
                         viewModel.signIn(email, password)
                     },
-                    enabled = email.isNotBlank() && password.isNotBlank()
+                    enabled = state.canLogin && email.isNotBlank() && password.isNotBlank()
                 )
             }
         }

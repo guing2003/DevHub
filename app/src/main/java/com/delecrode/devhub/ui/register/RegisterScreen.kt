@@ -75,6 +75,18 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
         }
     }
 
+    LaunchedEffect(email) {
+        if (state.emailError != null) {
+            viewModel.clearEmailError()
+        }
+    }
+
+    LaunchedEffect(password) {
+        if (state.passwordError != null) {
+            viewModel.clearPasswordError()
+        }
+    }
+
 
 
     Scaffold(
@@ -140,7 +152,9 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
                             label = "Nome Completo",
                             leadingIcon = Icons.Default.Person,
                             keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
+                            imeAction = ImeAction.Next,
+                            isError = state.nameError != null,
+                            errorMessage = state.nameError ?: ""
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -159,7 +173,9 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
                             label = "Nome de Usuario",
                             leadingIcon = Icons.Default.Person,
                             keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
+                            imeAction = ImeAction.Next,
+                            isError = state.usernameError != null,
+                            errorMessage = state.usernameError ?: ""
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -177,8 +193,8 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
                             value = email,
                             onValueChange = { email = it },
                             imeAction = ImeAction.Next,
-                            //isError = uiState.emailError != null,
-                            //errorMessage = uiState.emailError ?: ""
+                            isError = state.emailError != null,
+                            errorMessage = state.emailError ?: ""
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -198,8 +214,8 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
                             imeAction = ImeAction.Next,
                             isPasswordVisible = passwordVisible,
                             onVisibilityChange = { passwordVisible = !passwordVisible },
-                            //isError = uiState.passwordError != null,
-                            //errorMessage = uiState.passwordError ?: ""
+                            isError = state.passwordError != null,
+                            errorMessage = state.passwordError ?: ""
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -222,9 +238,9 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
                             onVisibilityChange = {
                                 passwordConfirmVisible = !passwordConfirmVisible
                             },
-                            label = "Confirmar Senha"
-                            //isError = uiState.passwordError != null,
-                            //errorMessage = uiState.passwordError ?: ""
+                            label = "Confirmar Senha",
+                            isError = state.confirmPasswordError != null,
+                            errorMessage = state.confirmPasswordError ?: ""
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -236,10 +252,11 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
                                     name = name,
                                     username = userName,
                                     email = email,
-                                    password = password
+                                    password = password,
+                                    confirmPassword = confirmPassword
                                 )
                             },
-                            enabled = email.isNotBlank() && password.isNotBlank() && password == confirmPassword && password.length >= 6
+                            enabled = state.canRegister && name.isNotBlank() && userName.isNotBlank() && email.isNotBlank() && password.isNotBlank()
                         )
                     }
                 }
