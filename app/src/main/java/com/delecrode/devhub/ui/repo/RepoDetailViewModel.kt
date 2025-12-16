@@ -7,6 +7,7 @@ import com.delecrode.devhub.domain.repository.RepoRepository
 import com.delecrode.devhub.utils.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
@@ -20,6 +21,7 @@ class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
                 isLoading = true,
                 error = null
             )
+            checkIfFavorite(repo)
             when (val result = repository.getRepoDetail(owner, repo)) {
                 is Result.Success -> {
                     _uiState.value = _uiState.value.copy(
@@ -35,6 +37,18 @@ class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
                         error = result.message
                     )
                 }
+            }
+        }
+    }
+
+    private fun checkIfFavorite(repoName: String) {
+        viewModelScope.launch {
+            try {
+                val favorites = repository.getAll().first()
+                val isFav = favorites.any { it.name == repoName }
+                _uiState.value = _uiState.value.copy(isFavorite = isFav)
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(isFavorite = false)
             }
         }
     }
@@ -69,7 +83,6 @@ class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
         )
     }
 
-
     fun favoriteRepo(id: Int, owner: String, name: String, description: String, url: String) {
         viewModelScope.launch {
             repository.save(
@@ -81,6 +94,14 @@ class RepoDetailViewModel(val repository: RepoRepository) : ViewModel() {
                     url = url
                 )
             )
+            _uiState.value = _uiState.value.copy(isFavorite = true)
+        }
+    }
+
+    fun deleteRepo(id: Int) {
+        viewModelScope.launch {
+            repository.delete(id)
+            _uiState.value = _uiState.value.copy(isFavorite = false)
         }
     }
 }

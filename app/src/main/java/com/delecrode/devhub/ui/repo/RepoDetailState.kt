@@ -7,5 +7,6 @@ data class RepoState(
     val error: String? = null,
     val userName: String? = null,
     val repo: RepoDetail? = null,
-    val languages: List<String>? = null
+    val languages: List<String>? = null,
+    val isFavorite: Boolean = false
 )

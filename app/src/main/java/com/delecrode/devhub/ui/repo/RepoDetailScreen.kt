@@ -33,9 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,8 +59,6 @@ fun RepoDetailScreen(
     repo: String
 ) {
     Log.i("RepoDetailScreen", "RepoDetailScreen: $owner, $repo")
-
-    var isFavorite by remember { mutableStateOf(false) }
 
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -97,23 +92,26 @@ fun RepoDetailScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            isFavorite = !isFavorite
-                            viewModel.favoriteRepo(
-                                id = state.repo?.id ?: 0,
-                                name = state.repo?.name ?: "",
-                                owner = owner,
-                                description = state.repo?.description ?: "",
-                                url = state.repo?.html_url ?: ""
-                            )
+                            if (state.isFavorite) {
+                                viewModel.deleteRepo(state.repo?.id ?: 0)
+                            } else {
+                                viewModel.favoriteRepo(
+                                    id = state.repo?.id ?: 0,
+                                    name = state.repo?.name ?: "",
+                                    owner = owner,
+                                    description = state.repo?.description ?: "",
+                                    url = state.repo?.html_url ?: ""
+                                )
+                            }
                         }
                     ) {
                         Icon(
-                            imageVector = if (isFavorite)
+                            imageVector = if (state.isFavorite)
                                 Icons.Filled.Favorite
                             else
                                 Icons.Outlined.FavoriteBorder,
                             contentDescription = "Favorito",
-                            tint = if (isFavorite)
+                            tint = if (state.isFavorite)
                                 Color.Red
                             else
                                 MaterialTheme.colorScheme.onBackground
@@ -125,7 +123,6 @@ fun RepoDetailScreen(
                 ),
                 navigationIcon = {
                     IconButton(onClick = {
-                        viewModel.clearState()
                         navController.popBackStack()
                     }) {
                         Icon(
@@ -179,13 +176,11 @@ fun RepoDetailScreen(
                                 color = MaterialTheme.colorScheme.onBackground
                             )
                         }
-                        state.languages.let {
-                            items(state.languages ?: emptyList()) { lang ->
-                                Text(
-                                    text = " $lang ",
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }
+                        items(state.languages ?: emptyList()) { lang ->
+                            Text(
+                                text = " $lang ",
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
                         }
                     }
 

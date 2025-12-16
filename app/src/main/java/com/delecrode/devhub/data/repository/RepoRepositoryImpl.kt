@@ -27,6 +27,10 @@ class RepoRepositoryImpl(
         localDataSource.save(repo.toEntity())
     }
 
+    override suspend fun delete(id: Int){
+        localDataSource.delete(id)
+    }
+
     override fun getAll(): Flow<List<RepoFav>> =
         localDataSource.getAll()
             .map { list -> list.map { it.toDomain() } }

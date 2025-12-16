@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -68,15 +69,6 @@ fun ReposFavScreen(navController: NavController, viewModel: RepoFavViewModel) {
     )
     { padding ->
         Column(modifier = Modifier.padding(padding)) {
-
-            Text(
-                "Repositórios Favoritos", fontWeight = FontWeight.Bold,
-                fontSize = 28.sp,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(state.repoFav.size) { index ->
                     val repo = repos[index]
@@ -103,7 +95,12 @@ fun ReposFavScreen(navController: NavController, viewModel: RepoFavViewModel) {
                                 .padding(10.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = repo.name)
+                            Text(text = repo.name, modifier = Modifier.weight(1f))
+                            Icon(
+                                imageVector = Icons.Default.Favorite,
+                                contentDescription = "Favorito",
+                                tint = Color.Red
+                            )
                         }
 
                         if (repo.description != null) {

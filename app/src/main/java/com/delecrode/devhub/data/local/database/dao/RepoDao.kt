@@ -1,6 +1,7 @@
 package com.delecrode.devhub.data.local.database.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -12,6 +13,9 @@ interface RepoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(repo: RepoEntity)
+
+    @Query("DELETE FROM repositories WHERE id = :id")
+    suspend fun delete(id: Int)
 
     @Query("SELECT * FROM repositories")
     fun getAll(): Flow<List<RepoEntity>>

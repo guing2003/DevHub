@@ -14,4 +14,8 @@ class RepoLocalDataSourceImpl(
 
     override fun getAll(): Flow<List<RepoEntity>> =
         dao.getAll()
+
+    override suspend fun delete(id: Int) {
+        dao.delete(id)
+    }
 }
