@@ -1,18 +1,18 @@
 package com.delecrode.devhub.domain.repository
 
-import com.google.firebase.auth.FirebaseUser
+import com.delecrode.devhub.domain.model.UserAuth
+import com.delecrode.devhub.utils.Result
 
 interface AuthRepository {
 
-    suspend fun signIn(email: String, password: String): FirebaseUser
+    suspend fun signIn(email: String, password: String): Result<UserAuth>
 
     suspend fun signUp(
         name: String,
         username: String,
         email: String,
         password: String
-    ): Boolean
+    ): Result<Unit>
     suspend fun signOut()
-
-
+    suspend fun forgotPassword(email: String): Result<Unit>
 }

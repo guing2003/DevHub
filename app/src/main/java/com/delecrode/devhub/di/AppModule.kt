@@ -16,6 +16,7 @@ import com.delecrode.devhub.domain.repository.RepoRepository
 import com.delecrode.devhub.domain.repository.UserRepository
 import com.delecrode.devhub.domain.session.SessionViewModel
 import com.delecrode.devhub.ui.favoritos.RepoFavViewModel
+import com.delecrode.devhub.ui.forgot.ForgotPasswordViewModel
 import com.delecrode.devhub.ui.home.HomeViewModel
 import com.delecrode.devhub.ui.login.AuthViewModel
 import com.delecrode.devhub.ui.profile.ProfileViewModel
@@ -55,7 +56,7 @@ val appModule = module {
     single { UserExtraData(get()) }
 
     single<UserRepository> { UserRepositoryImpl(get(), get(), get()) }
-    single<RepoRepository> { RepoRepositoryImpl(get(),get(),get()) }
+    single<RepoRepository> { RepoRepositoryImpl(get(), get(), get()) }
     single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
 
     viewModel { HomeViewModel(get(), get()) }
@@ -63,7 +64,7 @@ val appModule = module {
     viewModel { AuthViewModel(get()) }
     viewModel { SessionViewModel(get()) }
     viewModel { RegisterViewModel(get()) }
-    viewModel { ProfileViewModel(get(),get()) }
+    viewModel { ProfileViewModel(get(), get()) }
     viewModel { RepoFavViewModel(get()) }
-
+    viewModel { ForgotPasswordViewModel(get()) }
 }

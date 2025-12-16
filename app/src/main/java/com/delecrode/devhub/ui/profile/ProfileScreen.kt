@@ -64,7 +64,6 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
     val state = viewModel.uiState.collectAsState()
 
     val user = state.value.userForGit
-    val userName = state.value.userForFirebase.username
     val repos = state.value.repos
 
     LaunchedEffect(Unit) {

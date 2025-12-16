@@ -25,3 +25,9 @@ data class UserForFirebase(
     val email: String = ""
 )
 
+data class UserAuth(
+    val uid: String,
+    val email: String?
+)
+
+

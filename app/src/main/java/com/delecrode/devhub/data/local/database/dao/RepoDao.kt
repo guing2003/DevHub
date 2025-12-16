@@ -13,6 +13,9 @@ interface RepoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(repo: RepoEntity)
 
+    @Query("DELETE FROM repositories WHERE id = :id")
+    suspend fun delete(id: Int)
+
     @Query("SELECT * FROM repositories")
     fun getAll(): Flow<List<RepoEntity>>
 

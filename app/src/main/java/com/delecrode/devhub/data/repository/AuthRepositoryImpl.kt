@@ -1,15 +1,15 @@
 package com.delecrode.devhub.data.repository
 
 import com.delecrode.devhub.data.local.dataStore.AuthLocalDataSource
+import com.delecrode.devhub.data.mapper.toUserAuthDomain
 import com.delecrode.devhub.data.remote.firebase.FirebaseAuth
 import com.delecrode.devhub.data.remote.firebase.UserExtraData
 import com.delecrode.devhub.domain.model.RegisterUser
+import com.delecrode.devhub.domain.model.UserAuth
 import com.delecrode.devhub.domain.repository.AuthRepository
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.auth.FirebaseUser
+import com.delecrode.devhub.utils.Result
+import com.delecrode.devhub.utils.mapAuthError
+import com.delecrode.devhub.utils.mapSignUpError
 
 class AuthRepositoryImpl(
     private val authDataSource: FirebaseAuth,
@@ -17,31 +17,32 @@ class AuthRepositoryImpl(
     private val authLocalDataSource: AuthLocalDataSource
 ) : AuthRepository {
 
-    override suspend fun signIn(email: String, password: String): FirebaseUser {
-        try {
-            val response = authDataSource.signIn(email, password)
-            authLocalDataSource.saveUID(response?.uid ?: "")
-            return response ?: throw Exception("Erro ao recuperar usuário após login")
+    override suspend fun signIn(
+        email: String,
+        password: String
+    ): Result<UserAuth> {
+        return try {
+            val firebaseUser = authDataSource.signIn(email, password)
+                ?: return Result.Error("Erro ao autenticar usuário")
+            authLocalDataSource.saveUID(firebaseUser.uid)
+
+            Result.Success(firebaseUser.toUserAuthDomain())
+
         } catch (e: Exception) {
-            val errorMessage = when (e) {
-                is FirebaseAuthInvalidUserException -> "Usuário não encontrado."
-                is FirebaseAuthInvalidCredentialsException -> "Senha incorreta ou e-mail inválido."
-                is FirebaseAuthUserCollisionException -> "Este e-mail já está em uso."
-                is FirebaseAuthWeakPasswordException -> "A senha deve ter pelo menos 6 caracteres."
-                else -> e.message ?: "Erro desconhecido ao fazer login"
-            }
-            throw Exception(errorMessage)
+            Result.Error(mapAuthError(e))
         }
     }
+
 
     override suspend fun signUp(
         name: String,
         username: String,
         email: String,
         password: String
-    ): Boolean {
-        try {
-            val uid = authDataSource.signUp(email, password) ?: return false
+    ): Result<Unit> {
+        return try {
+            val uid = authDataSource.signUp(email, password)
+                ?: return Result.Error("Erro ao criar conta")
 
             val userData = RegisterUser(
                 fullName = name,
@@ -51,17 +52,23 @@ class AuthRepositoryImpl(
 
             userExtraDataSource.saveUserData(uid, userData)
 
-            return true
+            Result.Success(Unit)
+
         } catch (e: Exception) {
-            val errorMessage = when (e) {
-                is FirebaseAuthUserCollisionException -> "Este e-mail já está em uso."
-                is FirebaseAuthWeakPasswordException -> "A senha deve ter pelo menos 6 caracteres."
-                is FirebaseAuthInvalidCredentialsException -> "E-mail inválido."
-                else -> e.message ?: "Erro desconhecido ao cadastrar"
-            }
-            throw Exception(errorMessage)
+            Result.Error(mapSignUpError(e))
         }
     }
+
+    override suspend fun forgotPassword(email: String): Result<Unit> {
+        return try {
+            authDataSource.forgotPassword(email)
+            Result.Success(Unit)
+
+        } catch (e: Exception) {
+            Result.Error(mapAuthError(e))
+        }
+    }
+
 
     override suspend fun signOut() {
         authDataSource.signOut()

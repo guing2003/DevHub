@@ -5,16 +5,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -32,9 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.delecrode.devhub.navigation.AppDestinations
@@ -68,15 +65,6 @@ fun ReposFavScreen(navController: NavController, viewModel: RepoFavViewModel) {
     )
     { padding ->
         Column(modifier = Modifier.padding(padding)) {
-
-            Text(
-                "Repositórios Favoritos", fontWeight = FontWeight.Bold,
-                fontSize = 28.sp,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(state.repoFav.size) { index ->
                     val repo = repos[index]
@@ -103,7 +91,12 @@ fun ReposFavScreen(navController: NavController, viewModel: RepoFavViewModel) {
                                 .padding(10.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = repo.name)
+                            Text(text = repo.name, modifier = Modifier.weight(1f))
+                            Icon(
+                                imageVector = Icons.Default.Favorite,
+                                contentDescription = "Favorito",
+                                tint = Color.Red
+                            )
                         }
 
                         if (repo.description != null) {

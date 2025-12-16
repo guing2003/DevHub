@@ -8,4 +8,6 @@ interface RepoLocalDataSource {
     suspend fun save(repo: RepoEntity)
 
     fun getAll(): Flow<List<RepoEntity>>
+
+    suspend fun delete(id: Int)
 }

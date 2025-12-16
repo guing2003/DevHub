@@ -11,13 +11,24 @@ import com.delecrode.devhub.domain.model.Languages
 import com.delecrode.devhub.domain.model.RepoDetail
 import com.delecrode.devhub.domain.model.RepoFav
 import com.delecrode.devhub.domain.repository.RepoRepository
+import com.delecrode.devhub.utils.Result
+import com.delecrode.devhub.utils.mapHttpError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 
-class RepoRepositoryImpl(val repoApi: RepoApiService,  private val localDataSource: RepoLocalDataSource, private val authLocalDataSource: AuthLocalDataSource) : RepoRepository {
+class RepoRepositoryImpl(
+    val repoApi: RepoApiService,
+    private val localDataSource: RepoLocalDataSource,
+    private val authLocalDataSource: AuthLocalDataSource
+) : RepoRepository {
 
     override suspend fun save(repo: RepoFav) {
         localDataSource.save(repo.toEntity())
+    }
+
+    override suspend fun delete(id: Int){
+        localDataSource.delete(id)
     }
 
     override fun getAll(): Flow<List<RepoFav>> =
@@ -27,35 +38,40 @@ class RepoRepositoryImpl(val repoApi: RepoApiService,  private val localDataSour
     override fun getUserName(): Flow<String?> =
         authLocalDataSource.getUserName()
 
-    override suspend fun getRepoDetail(owner: String, repo: String): RepoDetail {
-        try {
+    override suspend fun getRepoDetail(owner: String, repo: String): Result<RepoDetail> {
+        return try {
             val response = repoApi.getRepoDetail(owner, repo)
             if (response.isSuccessful) {
                 val body = response.body()
-                if (body != null) {
-                    return body.toRepoDetailDomain()
-                } else {
-                    throw Exception("Resposta vazia do servidor")
-                }
+                    ?: return Result.Error("Dados do repositório indisponíveis")
+                Result.Success(body.toRepoDetailDomain())
             } else {
-                throw Exception("Erro na requisição ${response.code()}")
+                Result.Error(mapHttpError(response.code()))
             }
-        } catch (e: Exception) {
-            throw e
+        } catch (e: IOException) {
+            Result.Error("Sem conexão com a internet")
         }
     }
 
-    override suspend fun getLanguagesRepo(owner: String, repo: String) : Languages{
+    override suspend fun getLanguagesRepo(
+        owner: String,
+        repo: String
+    ): Result<Languages> {
         return try {
             val response = repoApi.getRepoLanguages(owner, repo)
+
             if (response.isSuccessful) {
                 val body = response.body()
-                body?.toLanguagesDomain() ?: Languages(emptyList())
+                    ?: return Result.Error("Linguagens indisponíveis")
+
+                Result.Success(body.toLanguagesDomain())
             } else {
-                Languages(emptyList())
+                Result.Error(mapHttpError(response.code()))
             }
-        } catch (e: Exception) {
-            Languages(emptyList())
+
+        } catch (e: IOException) {
+            Result.Error("Sem conexão com a internet")
         }
     }
+
 }
