@@ -11,8 +11,8 @@ import com.delecrode.devhub.domain.model.Languages
 import com.delecrode.devhub.domain.model.RepoDetail
 import com.delecrode.devhub.domain.model.RepoFav
 import com.delecrode.devhub.domain.repository.RepoRepository
-import com.delecrode.devhub.utils.Result
-import com.delecrode.devhub.utils.mapHttpError
+import com.delecrode.devhub.data.utils.Result
+import com.delecrode.devhub.data.utils.mapHttpError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.io.IOException

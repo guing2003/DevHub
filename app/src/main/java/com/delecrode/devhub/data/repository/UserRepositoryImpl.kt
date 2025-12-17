@@ -11,8 +11,8 @@ import com.delecrode.devhub.domain.model.Repos
 import com.delecrode.devhub.domain.model.UserForFirebase
 import com.delecrode.devhub.domain.model.UserForGit
 import com.delecrode.devhub.domain.repository.UserRepository
-import com.delecrode.devhub.utils.Result
-import com.delecrode.devhub.utils.mapHttpError
+import com.delecrode.devhub.data.utils.Result
+import com.delecrode.devhub.data.utils.mapHttpError
 import kotlinx.coroutines.flow.first
 import java.io.IOException
 
