@@ -1,8 +1,12 @@
 package com.delecrode.devhub.data.remote.webApi.instance
 
+import android.util.Log
 import com.delecrode.devhub.BuildConfig
+import com.delecrode.devhub.data.remote.webApi.instance.intercptor.FullLoggingInterceptor
 import com.delecrode.devhub.data.remote.webApi.service.RepoApiService
 import com.delecrode.devhub.data.remote.webApi.service.UserApiService
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,16 +15,11 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
 
-    private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level =
-            if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
-    }
-
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS)
-        .addInterceptor(loggingInterceptor)
+        .addInterceptor(FullLoggingInterceptor())
         .build()
 
     val retrofit: Retrofit = Retrofit.Builder()
