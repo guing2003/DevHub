@@ -33,8 +33,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.delecrode.devhub.R
-import com.delecrode.devhub.ui.theme.DevHubTheme
-import com.delecrode.devhub.ui.theme.PrimaryBlue
+import com.delecrode.devhub.presentation.ui.theme.DevHubTheme
+import com.delecrode.devhub.presentation.ui.theme.PrimaryBlue
+
 
 @Composable
 fun EmailTextField(

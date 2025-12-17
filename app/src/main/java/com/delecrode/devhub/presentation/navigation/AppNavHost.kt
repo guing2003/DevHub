@@ -8,20 +8,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.delecrode.devhub.domain.session.SessionViewModel
-import com.delecrode.devhub.ui.favoritos.RepoFavViewModel
-import com.delecrode.devhub.ui.favoritos.ReposFavScreen
-import com.delecrode.devhub.ui.forgot.ForgotPasswordScreen
-import com.delecrode.devhub.ui.forgot.ForgotPasswordViewModel
-import com.delecrode.devhub.ui.home.HomeScreen
-import com.delecrode.devhub.ui.home.HomeViewModel
-import com.delecrode.devhub.ui.login.AuthViewModel
-import com.delecrode.devhub.ui.login.LoginScreen
-import com.delecrode.devhub.ui.profile.ProfileScreen
-import com.delecrode.devhub.ui.profile.ProfileViewModel
-import com.delecrode.devhub.ui.register.RegisterScreen
-import com.delecrode.devhub.ui.register.RegisterViewModel
-import com.delecrode.devhub.ui.repo.RepoDetailScreen
-import com.delecrode.devhub.ui.repo.RepoDetailViewModel
+import com.delecrode.devhub.presentation.ui.favoritos.RepoFavViewModel
+import com.delecrode.devhub.presentation.ui.favoritos.ReposFavScreen
+import com.delecrode.devhub.presentation.ui.forgot.ForgotPasswordScreen
+import com.delecrode.devhub.presentation.ui.forgot.ForgotPasswordViewModel
+import com.delecrode.devhub.presentation.ui.home.HomeScreen
+import com.delecrode.devhub.presentation.ui.home.HomeViewModel
+import com.delecrode.devhub.presentation.ui.login.AuthViewModel
+import com.delecrode.devhub.presentation.ui.login.LoginScreen
+import com.delecrode.devhub.presentation.ui.profile.ProfileScreen
+import com.delecrode.devhub.presentation.ui.profile.ProfileViewModel
+import com.delecrode.devhub.presentation.ui.register.RegisterScreen
+import com.delecrode.devhub.presentation.ui.register.RegisterViewModel
+import com.delecrode.devhub.presentation.ui.repo.RepoDetailScreen
+import com.delecrode.devhub.presentation.ui.repo.RepoDetailViewModel
 import org.koin.androidx.compose.koinViewModel
 
 

@@ -106,8 +106,7 @@ fun RepoFavItemCard(
                 tint = Color.Red
             )
         }
-
-        repo.description.let {
+        if(repo.description?.isNotBlank() == true){
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -115,7 +114,7 @@ fun RepoFavItemCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = it,
+                    text = repo.description,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onBackground
                 )

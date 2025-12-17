@@ -63,7 +63,7 @@ import com.delecrode.devhub.R
 import com.delecrode.devhub.presentation.navigation.AppDestinations
 import com.delecrode.devhub.presentation.components.RepoItemCard
 import com.delecrode.devhub.presentation.components.UserProfileHeader
-import com.delecrode.devhub.ui.theme.PrimaryBlue
+import com.delecrode.devhub.presentation.ui.theme.PrimaryBlue
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,12 +91,6 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
     }
     LaunchedEffect(Unit) {
         homeViewModel.getUserForFirebase()
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            homeViewModel.clearUi()
-        }
     }
 
     Scaffold(
@@ -153,6 +147,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                                 expanded = false
                                 navController.navigate(AppDestinations.Profile.route)
                                 homeViewModel.clearStates()
+                                homeViewModel.clearUi()
                             }
                         )
                         DropdownMenuItem(
@@ -160,6 +155,8 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                             onClick = {
                                 expanded = false
                                 navController.navigate(AppDestinations.ReposFav.route)
+                                homeViewModel.clearUi()
+
                             }
                         )
                         DropdownMenuItem(
@@ -294,7 +291,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                 RepoItemCard(
                     repo = repo,
                     navController = navController,
-                    login = userForGit?.login ?: ""
+                    login = userForSearchGit?.login ?: ""
                 )
             }
         }

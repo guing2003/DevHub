@@ -18,6 +18,6 @@ data class RepoFav(
     val id: Int,
     val name: String,
     val userName: String,
-    val description: String,
+    val description: String?,
     val url: String,
 )

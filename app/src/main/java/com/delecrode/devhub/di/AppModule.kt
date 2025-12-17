@@ -4,6 +4,7 @@ import androidx.room.Room
 import com.delecrode.devhub.data.local.dataStore.AuthLocalDataSource
 import com.delecrode.devhub.data.local.dataStore.AuthLocalDataSourceImpl
 import com.delecrode.devhub.data.local.database.AppDatabase
+import com.delecrode.devhub.data.local.database.MIGRATION_1_2
 import com.delecrode.devhub.data.local.database.data.RepoLocalDataSource
 import com.delecrode.devhub.data.local.database.data.RepoLocalDataSourceImpl
 import com.delecrode.devhub.data.remote.firebase.UserExtraData
@@ -15,13 +16,13 @@ import com.delecrode.devhub.domain.repository.AuthRepository
 import com.delecrode.devhub.domain.repository.RepoRepository
 import com.delecrode.devhub.domain.repository.UserRepository
 import com.delecrode.devhub.domain.session.SessionViewModel
-import com.delecrode.devhub.ui.favoritos.RepoFavViewModel
-import com.delecrode.devhub.ui.forgot.ForgotPasswordViewModel
-import com.delecrode.devhub.ui.home.HomeViewModel
-import com.delecrode.devhub.ui.login.AuthViewModel
-import com.delecrode.devhub.ui.profile.ProfileViewModel
-import com.delecrode.devhub.ui.register.RegisterViewModel
-import com.delecrode.devhub.ui.repo.RepoDetailViewModel
+import com.delecrode.devhub.presentation.ui.favoritos.RepoFavViewModel
+import com.delecrode.devhub.presentation.ui.forgot.ForgotPasswordViewModel
+import com.delecrode.devhub.presentation.ui.home.HomeViewModel
+import com.delecrode.devhub.presentation.ui.login.AuthViewModel
+import com.delecrode.devhub.presentation.ui.profile.ProfileViewModel
+import com.delecrode.devhub.presentation.ui.register.RegisterViewModel
+import com.delecrode.devhub.presentation.ui.repo.RepoDetailViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidContext
@@ -42,7 +43,10 @@ val appModule = module {
             androidContext(),
             AppDatabase::class.java,
             "app_database"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
+
     }
 
     single {
