@@ -60,6 +60,32 @@ class HomeViewModel(
         }
     }
 
+    fun getUserForFirebase() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                error = null
+            )
+            when (val result = userRepository.getUserForFirebase()) {
+                is Result.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        userForFirebase = result.data,
+                        error = null
+                    )
+                    getUserForGit(result.data.username)
+                }
+
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = result.message
+                    )
+                }
+            }
+
+        }
+    }
+
     fun getUserForGit(userName: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
@@ -85,31 +111,7 @@ class HomeViewModel(
         }
     }
 
-    fun getUserForFirebase() {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                error = null
-            )
-            when (val result = userRepository.getUserForFirebase()) {
-                is Result.Success -> {
-                    _uiState.value = _uiState.value.copy(
-                        userForFirebase = result.data,
-                        isLoading = false,
-                        error = null
-                    )
-                }
 
-                is Result.Error -> {
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = result.message
-                    )
-                }
-            }
-
-        }
-    }
 
     fun getRepos(userName: String) {
         viewModelScope.launch {
@@ -156,5 +158,16 @@ class HomeViewModel(
                 error = null
             )
         }
+
+    fun clearUi() {
+        _uiState.update {
+            it.copy(
+                searchText = "",
+                userForSearchGit = null,
+                repos = emptyList(),
+                error = null
+            )
+        }
     }
+}
 

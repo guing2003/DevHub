@@ -107,7 +107,7 @@ fun RepoFavItemCard(
             )
         }
 
-        repo.description?.let {
+        repo.description.let {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
