@@ -1,14 +1,10 @@
 package com.delecrode.devhub.data.remote.webApi.instance
 
-import android.util.Log
 import com.delecrode.devhub.BuildConfig
 import com.delecrode.devhub.data.remote.webApi.instance.intercptor.FullLoggingInterceptor
 import com.delecrode.devhub.data.remote.webApi.service.RepoApiService
 import com.delecrode.devhub.data.remote.webApi.service.UserApiService
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit

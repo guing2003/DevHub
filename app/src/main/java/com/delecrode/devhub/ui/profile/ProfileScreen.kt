@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -53,6 +54,8 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.delecrode.devhub.R
 import com.delecrode.devhub.navigation.AppDestinations
+import com.delecrode.devhub.ui.components.RepoItemCard
+import com.delecrode.devhub.ui.components.UserProfileHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,7 +100,9 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
                     IconButton(onClick = { expanded = true }) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu"
+                            contentDescription = "Menu",
+                            tint = MaterialTheme.colorScheme.onBackground
+
                         )
                     }
 
@@ -129,125 +134,44 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
 
     )
     { padding ->
-
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(8.dp),
-                horizontalAlignment = CenterHorizontally
-            ) {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Box(
-                    modifier = Modifier
-                        .background(Color.White, shape = CircleShape)
-                        .wrapContentSize()
-                ) {
-                    AsyncImage(
-                        model = if (user?.avatar_url != null) user.avatar_url else R.drawable.git_logo,
-                        contentDescription = "Foto de Perfil",
-                        modifier = Modifier
-                            .size(100.dp)
-                            .clip(CircleShape)
-                    )
-                }
-
-
-                Spacer(modifier = Modifier.height(16.dp))
-
+            item {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(8.dp),
                     horizontalAlignment = CenterHorizontally
                 ) {
+                    Spacer(modifier = Modifier.height(16.dp))
 
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = user?.name ?: "",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 28.sp,
-                        color = MaterialTheme.colorScheme.onBackground
+                    UserProfileHeader(
+                        avatar_url = user?.avatar_url,
+                        name = user?.name ?: "",
+                        login = user?.login ?: "",
+                        bio = user?.bio ?: ""
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = user?.login ?: "",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = user?.bio ?: "",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-
-                if (user?.repos_url != null) {
-                    Text(
-                        "Repositórios", fontWeight = FontWeight.Bold,
-                        fontSize = 28.sp,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(repos.size) { index ->
-                        val repo = repos[index]
-                        Card(
-                            modifier = Modifier.padding(8.dp),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color.White),
-                            shape = RoundedCornerShape(8.dp),
-                            onClick = {
-                                navController.navigate(
-                                    AppDestinations.RepoDetail.createRoute(
-                                        user?.login ?: "",
-                                        repo.name
-                                    )
-                                )
-                            }
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(Color.LightGray)
-                                    .padding(10.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(text = repo.name)
-                            }
-
-                            if (repo.description != null) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(10.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(text = repo.description)
-                                }
-
-                            }
-                        }
+                    if (user?.repos_url != null) {
+                        Text(
+                            "Repositórios", fontWeight = FontWeight.Bold,
+                            fontSize = 28.sp,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
-
                 }
+                Spacer(modifier = Modifier.height(16.dp))
             }
-
+            items(repos) { repo ->
+                RepoItemCard(
+                    repo = repo,
+                    navController = navController,
+                    login = user?.login ?: ""
+                )
+            }
         }
     }
     if (state.value.isLoading) {

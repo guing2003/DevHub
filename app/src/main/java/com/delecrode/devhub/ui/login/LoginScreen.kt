@@ -1,6 +1,7 @@
 package com.delecrode.devhub.ui.login
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -37,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.delecrode.devhub.R
 import com.delecrode.devhub.navigation.AppDestinations
 import com.delecrode.devhub.ui.components.EmailTextField
 import com.delecrode.devhub.ui.components.PasswordTextField
@@ -106,10 +110,21 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
         Column(modifier = Modifier.padding(padding)) {
             Column(
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(12.dp)
                     .fillMaxSize(),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                    Image(
+                        painter = painterResource(R.drawable.git_logo),
+                        contentDescription = "Logo",
+                        modifier = Modifier.size(100.dp),
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Text(
                     text = "E-mail",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -162,6 +177,8 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
                         Text("Não tem conta? Cadastre-se")
                     }
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 PrimaryButton(
                     text = "ENTRAR",
