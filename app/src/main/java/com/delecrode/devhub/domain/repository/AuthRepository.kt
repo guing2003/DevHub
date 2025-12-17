@@ -1,7 +1,7 @@
 package com.delecrode.devhub.domain.repository
 
 import com.delecrode.devhub.domain.model.UserAuth
-import com.delecrode.devhub.utils.Result
+import com.delecrode.devhub.data.utils.Result
 
 interface AuthRepository {
 

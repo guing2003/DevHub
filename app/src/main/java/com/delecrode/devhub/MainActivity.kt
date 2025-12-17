@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.delecrode.devhub.domain.session.SessionViewModel
-import com.delecrode.devhub.navigation.AppNavHost
-import com.delecrode.devhub.ui.theme.DevHubTheme
+import com.delecrode.devhub.presentation.navigation.AppNavHost
+import com.delecrode.devhub.presentation.ui.theme.DevHubTheme
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {

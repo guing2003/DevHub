@@ -3,7 +3,7 @@ package com.delecrode.devhub.domain.repository
 import com.delecrode.devhub.domain.model.Languages
 import com.delecrode.devhub.domain.model.RepoDetail
 import com.delecrode.devhub.domain.model.RepoFav
-import com.delecrode.devhub.utils.Result
+import com.delecrode.devhub.data.utils.Result
 import kotlinx.coroutines.flow.Flow
 
 interface RepoRepository {

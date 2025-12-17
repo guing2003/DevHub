@@ -7,7 +7,7 @@ import com.delecrode.devhub.data.model.entity.RepoEntity
 
 @Database(
     entities = [RepoEntity::class],
-    version = 1
+    version = 2
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun repoDao(): RepoDao

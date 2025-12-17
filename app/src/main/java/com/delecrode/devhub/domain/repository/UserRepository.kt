@@ -3,7 +3,7 @@ package com.delecrode.devhub.domain.repository
 import com.delecrode.devhub.domain.model.Repos
 import com.delecrode.devhub.domain.model.UserForFirebase
 import com.delecrode.devhub.domain.model.UserForGit
-import com.delecrode.devhub.utils.Result
+import com.delecrode.devhub.data.utils.Result
 
 interface UserRepository {
     suspend fun getUserForGitHub(userName: String): Result<UserForGit>

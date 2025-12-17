@@ -7,9 +7,9 @@ import com.delecrode.devhub.data.remote.firebase.UserExtraData
 import com.delecrode.devhub.domain.model.RegisterUser
 import com.delecrode.devhub.domain.model.UserAuth
 import com.delecrode.devhub.domain.repository.AuthRepository
-import com.delecrode.devhub.utils.Result
-import com.delecrode.devhub.utils.mapAuthError
-import com.delecrode.devhub.utils.mapSignUpError
+import com.delecrode.devhub.data.utils.Result
+import com.delecrode.devhub.data.utils.mapAuthError
+import com.delecrode.devhub.data.utils.mapSignUpError
 
 class AuthRepositoryImpl(
     private val authDataSource: FirebaseAuth,
