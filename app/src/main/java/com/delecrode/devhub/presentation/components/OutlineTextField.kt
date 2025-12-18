@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.delecrode.devhub.R
 import com.delecrode.devhub.presentation.ui.theme.DevHubTheme
 import com.delecrode.devhub.presentation.ui.theme.PrimaryBlue
+import com.delecrode.devhub.presentation.ui.theme.Success
 
 
 @Composable
@@ -225,6 +227,9 @@ fun GenericOutlinedTextField(
     modifier: Modifier = Modifier,
     label: String,
     leadingIcon: ImageVector? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    isSuccess: Boolean = false,
+    successMessage: String = "",
     isError: Boolean = false,
     errorMessage: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -248,6 +253,7 @@ fun GenericOutlinedTextField(
                     )
                 }
             },
+            trailingIcon = trailingIcon,
             isError = isError,
             keyboardOptions = KeyboardOptions(
                 keyboardType = keyboardType,
@@ -262,9 +268,20 @@ fun GenericOutlinedTextField(
                 focusedContainerColor = MaterialTheme.colorScheme.background,
                 unfocusedContainerColor = MaterialTheme.colorScheme.background,
                 disabledContainerColor = MaterialTheme.colorScheme.background,
-                focusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
-                errorIndicatorColor = MaterialTheme.colorScheme.error
+                focusedIndicatorColor = when {
+                    isError -> MaterialTheme.colorScheme.error
+                    isSuccess -> Color.Green
+                    else -> MaterialTheme.colorScheme.onBackground
+                },
+
+                unfocusedIndicatorColor = when {
+                    isError -> MaterialTheme.colorScheme.error
+                    isSuccess -> Color.Green
+                    else -> MaterialTheme.colorScheme.onBackground
+                },
+
+                errorIndicatorColor = MaterialTheme.colorScheme.error,
+
             ),
             shape = RoundedCornerShape(8.dp)
         )
@@ -273,6 +290,14 @@ fun GenericOutlinedTextField(
             Text(
                 text = errorMessage,
                 color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+            )
+        }
+        if (isSuccess && successMessage.isNotEmpty()) {
+            Text(
+                text = successMessage,
+                color = Success,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp)
             )

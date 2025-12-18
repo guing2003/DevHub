@@ -67,7 +67,7 @@ val appModule = module {
     viewModel { RepoDetailViewModel(get()) }
     viewModel { AuthViewModel(get()) }
     viewModel { SessionViewModel(get()) }
-    viewModel { RegisterViewModel(get()) }
+    viewModel { RegisterViewModel(get(),get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { RepoFavViewModel(get()) }
     viewModel { ForgotPasswordViewModel(get()) }
