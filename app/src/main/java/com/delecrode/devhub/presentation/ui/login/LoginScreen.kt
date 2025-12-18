@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -41,10 +43,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.delecrode.devhub.R
-import com.delecrode.devhub.presentation.navigation.AppDestinations
 import com.delecrode.devhub.presentation.components.EmailTextField
 import com.delecrode.devhub.presentation.components.PasswordTextField
 import com.delecrode.devhub.presentation.components.PrimaryButton
+import com.delecrode.devhub.presentation.navigation.AppDestinations
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -115,11 +117,18 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(220.dp),
+                    contentAlignment = Alignment.Center
+                ) {
                     Image(
-                        painter = painterResource(R.drawable.git_logo),
+                        painter = painterResource(R.drawable.dev_hub_logo),
                         contentDescription = "Logo",
-                        modifier = Modifier.size(100.dp),
+                        modifier = Modifier
+                            .size(220.dp)
+                            .clip(RoundedCornerShape(8.dp))
                     )
                 }
 

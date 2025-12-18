@@ -2,20 +2,62 @@ package com.delecrode.devhub.presentation.ui.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.delecrode.devhub.domain.repository.AuthRepository
 import com.delecrode.devhub.data.utils.Result
+import com.delecrode.devhub.domain.repository.AuthRepository
+import com.delecrode.devhub.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
-    private val repository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RegisterState())
     val state = _state.asStateFlow()
 
-    fun signUp(name: String, username: String, email: String, password: String, confirmPassword: String) {
+    fun validateGithubUsername(username: String) {
+        viewModelScope.launch {
+
+            if (username.isBlank()) {
+                _state.value = _state.value.copy(
+                    usernameError = "Username é obrigatório",
+                    isLoading = false
+                )
+                return@launch
+            }
+
+            _state.value = _state.value.copy(isLoading = true)
+
+            when (userRepository.getUserForGitHub(username)) {
+                is Result.Success -> {
+                    _state.value = _state.value.copy(
+                        usernameSuccess = true,
+                        usernameSuccessMessage = "Usuário validado com sucesso",
+                        usernameError = null,
+                        isLoading = false
+                    )
+                }
+
+                is Result.Error -> {
+                    _state.value = _state.value.copy(
+                        usernameError = "Usuário não existe no GitHub",
+                        isLoading = false
+                    )
+                }
+            }
+        }
+    }
+
+
+    fun signUp(
+        name: String,
+        username: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ) {
         viewModelScope.launch {
             validateName(name)?.let {
                 _state.value = _state.value.copy(nameError = it)
@@ -26,6 +68,16 @@ class RegisterViewModel(
                 _state.value = _state.value.copy(usernameError = it)
                 return@launch
             }
+            when (userRepository.getUserForGitHub(username)) {
+                is Result.Success -> Unit
+                is Result.Error -> {
+                    _state.value = _state.value.copy(
+                        usernameError = "Usuário não existe no GitHub"
+                    )
+                    return@launch
+                }
+            }
+
             val emailValidation = validateEmail(email)
             if (emailValidation != null) {
                 _state.value = _state.value.copy(
@@ -50,7 +102,7 @@ class RegisterViewModel(
                 return@launch
             }
 
-            when (val result = repository.signUp(name, username, email, password)) {
+            when (val result = authRepository.signUp(name, username, email, password)) {
                 is Result.Success -> {
                     _state.value = RegisterState(isSuccess = true)
                 }
@@ -102,8 +154,6 @@ class RegisterViewModel(
             password != confirmPassword -> "As senhas devem ser iguais"
             else -> null
         }
-
-
 
 
     fun clearEmailError() {

@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,7 +29,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -38,11 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.delecrode.devhub.presentation.navigation.AppDestinations
 import com.delecrode.devhub.presentation.components.EmailTextField
 import com.delecrode.devhub.presentation.components.GenericOutlinedTextField
 import com.delecrode.devhub.presentation.components.PasswordTextField
 import com.delecrode.devhub.presentation.components.PrimaryButton
+import com.delecrode.devhub.presentation.navigation.AppDestinations
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +71,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
     }
 
     LaunchedEffect(state.isSuccess) {
-        if(state.isSuccess){
+        if (state.isSuccess) {
             navController.navigate(AppDestinations.Login.route)
         }
     }
@@ -86,6 +87,13 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
             viewModel.clearPasswordError()
         }
     }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.clearState()
+        }
+    }
+
 
 
 
@@ -130,20 +138,23 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
 
                         Text(
                             "Preencha os campos abaixo para criar sua conta no DevHub " +
-                                    "\nO seu nome de usuario deve ser o mesmo do seu usuario do GitHub",
+                                    "\nO seu nome de usuario deve ser o mesmo do seu usuario do GitHub " +
+                                    "\nClicando no pesquisar pode validar se o usuario existe no GitHub",
                             modifier = Modifier.padding(8.dp),
                             textAlign = TextAlign.Center,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Nome Completo",
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 8.dp),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+
                         )
 
                         GenericOutlinedTextField(
@@ -160,7 +171,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Nome de Usuario",
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 8.dp),
@@ -172,8 +183,19 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
                             onValueChange = { userName = it },
                             label = "Nome de Usuario",
                             leadingIcon = Icons.Default.Person,
+                            trailingIcon = {
+                                IconButton(onClick = { viewModel.validateGithubUsername(userName) }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Search,
+                                        contentDescription = "Validar Usuario",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            },
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Next,
+                            isSuccess = state.usernameSuccess,
+                            successMessage = state.usernameSuccessMessage ?: "",
                             isError = state.usernameError != null,
                             errorMessage = state.usernameError ?: ""
                         )
@@ -182,7 +204,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
 
                         Text(
                             text = "E-mail",
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 8.dp),
@@ -201,7 +223,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
 
                         Text(
                             text = "Senha",
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 8.dp),
@@ -223,7 +245,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
 
                         Text(
                             text = "Confirmar Senha",
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 8.dp),
@@ -243,7 +265,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
                             errorMessage = state.confirmPasswordError ?: ""
                         )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(30.dp))
 
                         PrimaryButton(
                             text = "Cadastrar",
@@ -258,6 +280,8 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
                             },
                             enabled = state.canRegister && name.isNotBlank() && userName.isNotBlank() && email.isNotBlank() && password.isNotBlank()
                         )
+
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
             }

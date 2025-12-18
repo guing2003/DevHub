@@ -5,6 +5,10 @@ data class RegisterState(
     val isSuccess: Boolean = false,
     val error: String? = null,
 
+    val usernameSuccess: Boolean = false,
+    val usernameSuccessMessage: String? = null,
+
+
     val nameError: String? = null,
     val usernameError: String? = null,
     val emailError: String? = null,
