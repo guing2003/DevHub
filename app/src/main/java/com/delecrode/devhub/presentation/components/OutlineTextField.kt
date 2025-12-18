@@ -59,7 +59,7 @@ fun EmailTextField(
                     MaterialTheme.colorScheme.background,
                     RoundedCornerShape(8.dp)
                 ),
-            placeholder = { Text(label) },
+            placeholder = { Text(label, color = MaterialTheme.colorScheme.onBackground) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Person,
@@ -134,7 +134,7 @@ fun PasswordTextField(
             modifier = modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background, RoundedCornerShape(8.dp)),
-            placeholder = { Text(label) },
+            placeholder = { Text(label, color = MaterialTheme.colorScheme.onBackground) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Lock,
@@ -238,7 +238,7 @@ fun GenericOutlinedTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = modifier.fillMaxWidth(),
-            placeholder = { Text(label) },
+            placeholder = { Text(label, color = MaterialTheme.colorScheme.onBackground) },
             leadingIcon = {
                 leadingIcon?.let {
                     Icon(
