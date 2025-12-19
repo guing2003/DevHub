@@ -1,7 +1,10 @@
 package com.delecrode.devhub
 
 import android.app.Application
-import com.delecrode.devhub.di.appModule
+import com.delecrode.devhub.di.dataModule
+import com.delecrode.devhub.di.repositoryModule
+import com.delecrode.devhub.di.useCaseModule
+import com.delecrode.devhub.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 
@@ -10,7 +13,10 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(appModule)
+            modules( dataModule,
+                repositoryModule,
+                useCaseModule,
+                viewModelModule)
         }
     }
 }

@@ -1,100 +1,77 @@
 package com.delecrode.devhub.presentation.ui.profile
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.delecrode.devhub.domain.repository.AuthRepository
-import com.delecrode.devhub.domain.repository.UserRepository
 import com.delecrode.devhub.data.utils.Result
+import com.delecrode.devhub.domain.model.UserForFirebase
+import com.delecrode.devhub.domain.model.UserForGit
+import com.delecrode.devhub.domain.useCase.AuthUseCase
+import com.delecrode.devhub.domain.useCase.FetchUserDataUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
 class ProfileViewModel(
-    private val userRepository: UserRepository,
-    private val authRepository: AuthRepository
+    private val fetchUserData: FetchUserDataUseCase,
+    private val authUseCase: AuthUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileState())
     val uiState: StateFlow<ProfileState> = _uiState
 
 
-    fun getUserForFirebase() {
-        _uiState.value = _uiState.value.copy(
-            isLoading = true
-        )
+    fun loadProfile() {
         viewModelScope.launch {
-            when (val result = userRepository.getUserForFirebase()) {
-                is Result.Success -> {
-                    _uiState.value = _uiState.value.copy(
-                        userForFirebase = result.data,
-                        isLoading = false
-                    )
-                    getUserForGit(result.data.username)
-                }
-
-                is Result.Error -> {
-                    _uiState.value = _uiState.value.copy(
-                        error = result.message,
-                        isLoading = false
-                    )
+            _uiState.update { it.copy(isLoading = true, error = null) }
+            val firebaseResult = loadUserFromFirebase()
+            if (firebaseResult is Result.Success) {
+                val gitResult = loadUserFromGit(firebaseResult.data.username)
+                if (gitResult is Result.Success && gitResult.data.login != null) {
+                    loadRepos(gitResult.data.login)
                 }
             }
         }
     }
 
-    fun getUserForGit(userName: String) {
-        viewModelScope.launch {
-            when (val result = userRepository.getUserForGitHub(userName)) {
-                is Result.Success -> {
-                    _uiState.value = _uiState.value.copy(
-                        userForGit = result.data,
-                        isLoading = false
-                    )
-                    getRepos(userName)
-                }
-
-                is Result.Error -> {
-                    _uiState.value = _uiState.value.copy(
-                        error = result.message,
-                        isLoading = false
-                    )
-                }
-            }
+    suspend fun loadUserFromFirebase(): Result<UserForFirebase> {
+        val result = fetchUserData.loadUserFromFirebase()
+        when (result) {
+            is Result.Success -> _uiState.update { it.copy(userForFirebase = result.data, isLoading = false) }
+            is Result.Error -> _uiState.update { it.copy(error = result.message, isLoading = false) }
         }
+        return result
     }
 
-    fun getRepos(userName: String) {
-        viewModelScope.launch {
-            when (val result = userRepository.getRepos(userName)) {
-                is Result.Success -> {
-                    _uiState.value = _uiState.value.copy(
-                        repos = result.data,
-                        isLoading = false
-                    )
-                }
+    suspend fun loadUserFromGit(username: String): Result<UserForGit> {
+        val result = fetchUserData.loadUserFromGit(username)
+        when (result) {
+            is Result.Success -> _uiState.update { it.copy(userForGit = result.data, isLoading = false) }
+            is Result.Error -> _uiState.update { it.copy(error = result.message, isLoading = false) }
+        }
+        return result
+    }
 
-                is Result.Error -> {
-                    _uiState.value = _uiState.value.copy(
-                        error = result.message,
-                        isLoading = false
-                    )
-                }
-            }
+
+    suspend fun loadRepos(username: String) {
+        when (val result = fetchUserData.loadRepos(username)) {
+            is Result.Success ->
+                _uiState.update { it.copy(repos = result.data, isLoading = false) }
+
+            is Result.Error ->
+                _uiState.update { it.copy(error = result.message, isLoading = false) }
         }
     }
 
     fun signOut() {
         viewModelScope.launch {
             try {
-                authRepository.signOut()
+                authUseCase.signOut()
             } catch (e: Exception) {
-                Log.e("ProfileViewModel", "Erro ao fazer logout", e)
-                _uiState.value = _uiState.value.copy(
-                    error = e.message,
-                    isLoading = false
-                )
+                _uiState.update {
+                    it.copy(error = e.message, isLoading = false)
+                }
             }
         }
     }

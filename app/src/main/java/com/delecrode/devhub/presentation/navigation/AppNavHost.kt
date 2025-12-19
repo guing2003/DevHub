@@ -1,5 +1,6 @@
 package com.delecrode.devhub.presentation.navigation
 
+import HomeViewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavType
@@ -13,7 +14,6 @@ import com.delecrode.devhub.presentation.ui.favoritos.ReposFavScreen
 import com.delecrode.devhub.presentation.ui.forgot.ForgotPasswordScreen
 import com.delecrode.devhub.presentation.ui.forgot.ForgotPasswordViewModel
 import com.delecrode.devhub.presentation.ui.home.HomeScreen
-import com.delecrode.devhub.presentation.ui.home.HomeViewModel
 import com.delecrode.devhub.presentation.ui.login.AuthViewModel
 import com.delecrode.devhub.presentation.ui.login.LoginScreen
 import com.delecrode.devhub.presentation.ui.profile.ProfileScreen

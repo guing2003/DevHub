@@ -59,7 +59,7 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
     val repos = state.value.repos
 
     LaunchedEffect(Unit) {
-        viewModel.getUserForFirebase()
+        viewModel.loadProfile()
     }
 
     LaunchedEffect(state.value.error) {

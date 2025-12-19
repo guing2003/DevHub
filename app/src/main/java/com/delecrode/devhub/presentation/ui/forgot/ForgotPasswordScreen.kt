@@ -46,8 +46,8 @@ fun ForgotPasswordScreen(navController: NavController, viewModel: ForgotPassword
 
     var email by remember { mutableStateOf("") }
 
-    LaunchedEffect(state.success) {
-        if (state.success) {
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess) {
             navController.navigate(AppDestinations.Login.route){
                 popUpTo(AppDestinations.Login.route){
                     inclusive = true

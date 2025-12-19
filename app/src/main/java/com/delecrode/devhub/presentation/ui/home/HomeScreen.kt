@@ -1,5 +1,6 @@
 package com.delecrode.devhub.presentation.ui.home
 
+import HomeViewModel
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -89,7 +90,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
         }
     }
     LaunchedEffect(Unit) {
-        homeViewModel.getUserForFirebase()
+        homeViewModel.loadHome()
     }
 
     Scaffold(

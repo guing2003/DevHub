@@ -32,7 +32,7 @@ class ForgotPasswordViewModel(private val authRepository: AuthRepository) : View
                 is Result.Success -> {
                     _state.value = _state.value.copy(
                         isLoading = false,
-                        success = true
+                        isSuccess = true
                     )
                 }
 
