@@ -2,7 +2,6 @@ package com.delecrode.devhub.viewModel
 
 import com.delecrode.devhub.MainDispatcherRule
 import com.delecrode.devhub.data.utils.Result
-import com.delecrode.devhub.domain.model.UserAuth
 import com.delecrode.devhub.domain.repository.AuthRepository
 import com.delecrode.devhub.presentation.ui.forgot.ForgotPasswordViewModel
 import io.mockk.coEvery
