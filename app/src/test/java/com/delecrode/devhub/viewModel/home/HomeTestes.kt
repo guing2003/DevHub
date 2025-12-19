@@ -17,9 +17,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class HomeTests {
-
-
+class HomeTestes {
     @get:Rule
     val dispatcherRule = MainDispatcherRule()
 

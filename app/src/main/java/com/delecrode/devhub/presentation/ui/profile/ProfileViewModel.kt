@@ -3,6 +3,8 @@ package com.delecrode.devhub.presentation.ui.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delecrode.devhub.data.utils.Result
+import com.delecrode.devhub.domain.model.UserForFirebase
+import com.delecrode.devhub.domain.model.UserForGit
 import com.delecrode.devhub.domain.useCase.AuthUseCase
 import com.delecrode.devhub.domain.useCase.FetchUserDataUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,47 +25,42 @@ class ProfileViewModel(
     fun loadProfile() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
-
-            when (val firebase = fetchUserData.loadUserFromFirebase()) {
-                is Result.Success -> {
-                    val firebaseUser = firebase.data
-                    _uiState.update { it.copy(userForFirebase = firebaseUser) }
-
-                    when (val git = fetchUserData.loadUserFromGit(firebaseUser.username)) {
-                        is Result.Success -> {
-                            val gitUser = git.data
-                            _uiState.update { it.copy(userForGit = gitUser) }
-
-                            loadRepos(firebaseUser.username)
-
-                            _uiState.update { it.copy(isLoading = false) }
-                        }
-
-                        is Result.Error -> {
-                            _uiState.update {
-                                it.copy(error = git.message, isLoading = false)
-                            }
-                        }
-                    }
-                }
-
-                is Result.Error -> {
-                    _uiState.update { it.copy(error = firebase.message, isLoading = false) }
+            val firebaseResult = loadUserFromFirebase()
+            if (firebaseResult is Result.Success) {
+                val gitResult = loadUserFromGit(firebaseResult.data.username)
+                if (gitResult is Result.Success && gitResult.data.login != null) {
+                    loadRepos(gitResult.data.login)
                 }
             }
         }
     }
 
+    suspend fun loadUserFromFirebase(): Result<UserForFirebase> {
+        val result = fetchUserData.loadUserFromFirebase()
+        when (result) {
+            is Result.Success -> _uiState.update { it.copy(userForFirebase = result.data, isLoading = false) }
+            is Result.Error -> _uiState.update { it.copy(error = result.message, isLoading = false) }
+        }
+        return result
+    }
 
-    private fun loadRepos(username: String) {
-        viewModelScope.launch {
-            when (val result = fetchUserData.loadRepos(username)) {
-                is Result.Success ->
-                    _uiState.update { it.copy(repos = result.data) }
+    suspend fun loadUserFromGit(username: String): Result<UserForGit> {
+        val result = fetchUserData.loadUserFromGit(username)
+        when (result) {
+            is Result.Success -> _uiState.update { it.copy(userForGit = result.data, isLoading = false) }
+            is Result.Error -> _uiState.update { it.copy(error = result.message, isLoading = false) }
+        }
+        return result
+    }
 
-                is Result.Error ->
-                    _uiState.update { it.copy(error = result.message) }
-            }
+
+    suspend fun loadRepos(username: String) {
+        when (val result = fetchUserData.loadRepos(username)) {
+            is Result.Success ->
+                _uiState.update { it.copy(repos = result.data, isLoading = false) }
+
+            is Result.Error ->
+                _uiState.update { it.copy(error = result.message, isLoading = false) }
         }
     }
 
