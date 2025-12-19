@@ -1,6 +1,8 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delecrode.devhub.data.utils.Result
+import com.delecrode.devhub.domain.model.UserForFirebase
+import com.delecrode.devhub.domain.model.UserForGit
 import com.delecrode.devhub.domain.useCase.AuthUseCase
 import com.delecrode.devhub.domain.useCase.FetchUserDataUseCase
 import com.delecrode.devhub.presentation.ui.home.HomeState
@@ -30,7 +32,7 @@ class HomeViewModel(
         loadRepos(search)
     }
 
-    private fun loadSearchUser(username: String) {
+    fun loadSearchUser(username: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
@@ -50,34 +52,39 @@ class HomeViewModel(
 
     fun loadHome() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
-
-            when (val firebase = fetchUserData.loadUserFromFirebase()) {
-                is Result.Success -> {
-                    _uiState.update { it.copy(userForFirebase = firebase.data) }
-
-                    when (val git = fetchUserData.loadUserFromGit(firebase.data.username)) {
-                        is Result.Success ->
-                            _uiState.update {
-                                it.copy(userForGit = git.data, isLoading = false)
-                            }
-
-                        is Result.Error ->
-                            _uiState.update {
-                                it.copy(error = git.message, isLoading = false)
-                            }
-                    }
-                }
-
-                is Result.Error ->
-                    _uiState.update {
-                        it.copy(error = firebase.message, isLoading = false)
-                    }
+            val firebaseResult = loadUserFromFirebase()
+            if (firebaseResult is Result.Success) {
+                loadUserFromGit(firebaseResult.data.username)
             }
         }
     }
 
-    private fun loadRepos(username: String) {
+    suspend fun loadUserFromFirebase(): Result<UserForFirebase> {
+        _uiState.update { it.copy(isLoading = true, error = null) }
+
+        val result = fetchUserData.loadUserFromFirebase()
+        when (result) {
+            is Result.Success -> _uiState.update { it.copy(userForFirebase = result.data, isLoading = false) }
+            is Result.Error -> _uiState.update { it.copy(error = result.message, isLoading = false) }
+        }
+        return result
+    }
+
+    suspend fun loadUserFromGit(username: String): Result<UserForGit> {
+        _uiState.update { it.copy(isLoading = true, error = null) }
+
+        val result = fetchUserData.loadUserFromGit(username)
+        when (result) {
+            is Result.Success -> _uiState.update { it.copy(userForGit = result.data, isLoading = false) }
+            is Result.Error -> _uiState.update { it.copy(error = result.message, isLoading = false) }
+        }
+        return result
+    }
+
+
+
+
+    fun loadRepos(username: String) {
         viewModelScope.launch {
             when (val result = fetchUserData.loadRepos(username)) {
                 is Result.Success ->
