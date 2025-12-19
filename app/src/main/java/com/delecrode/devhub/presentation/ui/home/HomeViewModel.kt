@@ -62,29 +62,48 @@ class HomeViewModel(
 
     fun getUserForFirebase() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                error = null
-            )
-            when (val result = userRepository.getUserForFirebase()) {
+            _uiState.update {
+                it.copy(isLoading = true, error = null)
+            }
+
+            when (val firebaseResult = userRepository.getUserForFirebase()) {
                 is Result.Success -> {
-                    _uiState.value = _uiState.value.copy(
-                        userForFirebase = result.data,
-                        error = null
-                    )
-                    getUserForGit(result.data.username)
+                    val userFirebase = firebaseResult.data
+
+                    _uiState.update {
+                        it.copy(userForFirebase = userFirebase, isLoading = false)
+                    }
+
+                    when (val gitResult = userRepository.getUserForGitHub(userFirebase.username)) {
+                        is Result.Success -> {
+                            _uiState.update {
+                                it.copy(userForGit = gitResult.data)
+                            }
+                        }
+
+                        is Result.Error -> {
+                            _uiState.update {
+                                it.copy(
+                                    error = gitResult.message,
+                                    isLoading = false
+                                )
+                            }
+                        }
+                    }
                 }
 
                 is Result.Error -> {
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = result.message
-                    )
+                    _uiState.update {
+                        it.copy(
+                            error = firebaseResult.message,
+                            isLoading = false
+                        )
+                    }
                 }
             }
-
         }
     }
+
 
     fun getUserForGit(userName: String) {
         viewModelScope.launch {
