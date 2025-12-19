@@ -43,7 +43,8 @@ class AuthViewModel(
 
             when (val result = repository.signIn(email, password)) {
                 is Result.Success -> {
-                    _state.value = AuthState(isSuccess = true)
+                    _state.value = AuthState(isSuccess = true, userUid = result.data.uid)
+
                 }
 
                 is Result.Error -> {
@@ -79,16 +80,11 @@ class AuthViewModel(
         return when {
             password.isBlank() -> "Senha é obrigatória"
             password.length < 6 -> "Senha deve ter pelo menos 6 caracteres"
-            !countPassword(password) -> "Senha deve conter pelo menos 1 letra e 1 número"
             else -> null
         }
     }
 
     private fun isValidEmailFormat(email: String): Boolean {
         return Regex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$").matches(email)
-    }
-
-    private fun countPassword(password: String): Boolean {
-        return password.length >= 6
     }
 }

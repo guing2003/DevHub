@@ -50,6 +50,12 @@ android {
 
 dependencies {
 
+    //Testes Unitarios e Instrumentados
+    testImplementation("io.mockk:mockk:1.13.10")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+
     //Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
