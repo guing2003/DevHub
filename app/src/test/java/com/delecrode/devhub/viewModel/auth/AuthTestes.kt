@@ -1,4 +1,4 @@
-package com.delecrode.devhub.auth
+package com.delecrode.devhub.viewModel.auth
 
 import com.delecrode.devhub.MainDispatcherRule
 import com.delecrode.devhub.data.utils.Result
@@ -26,11 +26,6 @@ class AuthTestes {
     fun setup() {
         viewModel = AuthViewModel(authRepository)
     }
-
-
-
-
-        //Testes de ViewModel
         @Test
         fun `quando signIn sucesso deve atualizar state com uid e sucesso`() = runTest {
             val userAuth = UserAuth(

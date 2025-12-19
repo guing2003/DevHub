@@ -1,10 +1,7 @@
 package com.delecrode.devhub.presentation.ui.profile
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.delecrode.devhub.domain.repository.AuthRepository
-import com.delecrode.devhub.domain.repository.UserRepository
 import com.delecrode.devhub.data.utils.Result
 import com.delecrode.devhub.domain.useCase.AuthUseCase
 import com.delecrode.devhub.domain.useCase.FetchUserDataUseCase

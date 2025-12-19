@@ -1,6 +1,5 @@
 package com.delecrode.devhub.domain.useCase
 
-import com.delecrode.devhub.domain.repository.AuthRepository
 import com.delecrode.devhub.domain.repository.UserRepository
 
 class FetchUserDataUseCase(
