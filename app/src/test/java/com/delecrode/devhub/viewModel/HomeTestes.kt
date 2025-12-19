@@ -1,4 +1,4 @@
-package com.delecrode.devhub.viewModel.home
+package com.delecrode.devhub.viewModel
 
 import HomeViewModel
 import com.delecrode.devhub.MainDispatcherRule

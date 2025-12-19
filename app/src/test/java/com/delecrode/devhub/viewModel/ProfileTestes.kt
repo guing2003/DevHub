@@ -1,4 +1,4 @@
-package com.delecrode.devhub.viewModel.profile
+package com.delecrode.devhub.viewModel
 
 import com.delecrode.devhub.MainDispatcherRule
 import com.delecrode.devhub.data.utils.Result
@@ -157,8 +157,8 @@ class ProfileTestes {
                 fetchUserData.loadUserFromGit(userForFirebase.username)
             } returns Result.Success(userForGit)
 
-            coEvery{
-                fetchUserData.loadRepos(userForGit.login.let{"teste userName"})
+            coEvery {
+                fetchUserData.loadRepos(userForGit.login.let { "teste userName" })
             } returns Result.Success(repos)
 
 
@@ -217,8 +217,8 @@ class ProfileTestes {
                 fetchUserData.loadUserFromGit(userForFirebase.username)
             } returns Result.Success(userForGit)
 
-            coEvery{
-                fetchUserData.loadRepos(userForGit.login.let{"teste userName"})
+            coEvery {
+                fetchUserData.loadRepos(userForGit.login.let { "teste userName" })
             } returns Result.Error("Erro ao buscar repositorios")
 
 

@@ -1,4 +1,4 @@
-package com.delecrode.devhub.viewModel.auth
+package com.delecrode.devhub.viewModel
 
 import com.delecrode.devhub.MainDispatcherRule
 import com.delecrode.devhub.data.utils.Result
