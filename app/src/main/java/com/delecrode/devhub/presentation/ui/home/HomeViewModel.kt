@@ -1,182 +1,105 @@
-package com.delecrode.devhub.presentation.ui.home
-
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.delecrode.devhub.domain.repository.AuthRepository
-import com.delecrode.devhub.domain.repository.UserRepository
 import com.delecrode.devhub.data.utils.Result
+import com.delecrode.devhub.domain.useCase.AuthUseCase
+import com.delecrode.devhub.domain.useCase.FetchUserDataUseCase
+import com.delecrode.devhub.presentation.ui.home.HomeState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
 class HomeViewModel(
-    private val userRepository: UserRepository,
-    private val authRepository: AuthRepository
-) :
-    ViewModel() {
+    private val fetchUserData: FetchUserDataUseCase,
+    private val authUseCase: AuthUseCase
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeState())
     val uiState: StateFlow<HomeState> = _uiState
 
     fun onSearchTextChange(value: String) {
-        _uiState.update {
-            it.copy(searchText = value)
-        }
+        _uiState.update { it.copy(searchText = value) }
     }
 
     fun onSearchClick() {
         val search = uiState.value.searchText
         if (search.isBlank()) return
 
-        getRepos(search)
-        getUserForSearchGit(search)
+        loadSearchUser(search)
+        loadRepos(search)
     }
 
-
-    fun getUserForSearchGit(userName: String) {
+    private fun loadSearchUser(username: String) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                error = null
-            )
-            when (val result = userRepository.getUserForGitHub(userName)) {
-                is Result.Success -> {
-                    _uiState.value = _uiState.value.copy(
-                        userForSearchGit = result.data,
-                        isLoading = false,
-                        error = null
-                    )
-                }
+            _uiState.update { it.copy(isLoading = true, error = null) }
 
-                is Result.Error -> {
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = result.message
-                    )
-                }
-            }
-        }
-    }
-
-    fun getUserForFirebase() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(isLoading = true, error = null)
-            }
-
-            when (val firebaseResult = userRepository.getUserForFirebase()) {
-                is Result.Success -> {
-                    val userFirebase = firebaseResult.data
-
+            when (val result = fetchUserData.loadUserFromGit(username)) {
+                is Result.Success ->
                     _uiState.update {
-                        it.copy(userForFirebase = userFirebase, isLoading = false)
+                        it.copy(userForSearchGit = result.data, isLoading = false)
                     }
 
-                    when (val gitResult = userRepository.getUserForGitHub(userFirebase.username)) {
-                        is Result.Success -> {
-                            _uiState.update {
-                                it.copy(userForGit = gitResult.data)
-                            }
-                        }
-
-                        is Result.Error -> {
-                            _uiState.update {
-                                it.copy(
-                                    error = gitResult.message,
-                                    isLoading = false
-                                )
-                            }
-                        }
-                    }
-                }
-
-                is Result.Error -> {
+                is Result.Error ->
                     _uiState.update {
-                        it.copy(
-                            error = firebaseResult.message,
-                            isLoading = false
-                        )
+                        it.copy(error = result.message, isLoading = false)
+                    }
+            }
+        }
+    }
+
+    fun loadHome() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, error = null) }
+
+            when (val firebase = fetchUserData.loadUserFromFirebase()) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(userForFirebase = firebase.data) }
+
+                    when (val git = fetchUserData.loadUserFromGit(firebase.data.username)) {
+                        is Result.Success ->
+                            _uiState.update {
+                                it.copy(userForGit = git.data, isLoading = false)
+                            }
+
+                        is Result.Error ->
+                            _uiState.update {
+                                it.copy(error = git.message, isLoading = false)
+                            }
                     }
                 }
+
+                is Result.Error ->
+                    _uiState.update {
+                        it.copy(error = firebase.message, isLoading = false)
+                    }
             }
         }
     }
 
-
-    fun getUserForGit(userName: String) {
+    private fun loadRepos(username: String) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                error = null
-            )
-            when (val result = userRepository.getUserForGitHub(userName)) {
-                is Result.Success -> {
-                    _uiState.value = _uiState.value.copy(
-                        userForGit = result.data,
-                        isLoading = false,
-                        error = null
-                    )
-                }
+            when (val result = fetchUserData.loadRepos(username)) {
+                is Result.Success ->
+                    _uiState.update { it.copy(repos = result.data) }
 
-                is Result.Error -> {
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = result.message
-                    )
-                }
+                is Result.Error ->
+                    _uiState.update { it.copy(error = result.message) }
             }
         }
     }
 
-
-
-    fun getRepos(userName: String) {
+    fun signOut() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                error = null
-            )
-            when (val result = userRepository.getRepos(userName)) {
-                is Result.Success -> {
-                    _uiState.value = _uiState.value.copy(
-                        repos = result.data,
-                        isLoading = false,
-                        error = null
-                    )
-                }
-
-                is Result.Error -> {
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = result.message
-                    )
+            try {
+                authUseCase.signOut()
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(error = e.message, isLoading = false)
                 }
             }
         }
     }
-
-        fun signOut() {
-            viewModelScope.launch {
-                try {
-                    authRepository.signOut()
-                } catch (e: Exception) {
-                    Log.e("HomeViewModel", "Erro ao fazer logout", e)
-                    _uiState.value = _uiState.value.copy(
-                        error = e.message,
-                        isLoading = false
-                    )
-                }
-            }
-        }
-
-        fun clearStates() {
-            _uiState.value = _uiState.value.copy(
-                isLoading = false,
-                error = null
-            )
-        }
 
     fun clearUi() {
         _uiState.update {
@@ -188,5 +111,14 @@ class HomeViewModel(
             )
         }
     }
-}
 
+    fun clearStates() {
+        _uiState.update {
+            it.copy(
+                userForFirebase = null,
+                userForGit = null,
+                userForSearchGit = null
+            )
+        }
+    }
+}
