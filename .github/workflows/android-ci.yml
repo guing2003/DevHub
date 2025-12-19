@@ -2,9 +2,14 @@ name: Android CI
 
 on:
   push:
-    branches: [ "develop" ]
+    branches:
+      - "testes"
+      - "develop"
+
   pull_request:
-    branches: [ "develop" ]
+    branches:
+      - "develop"
+      - "testes"
 
 jobs:
   build:
@@ -30,6 +35,9 @@ jobs:
 
       - name: Run Lint
         run: ./gradlew lint
+
+      - name: Run Unit Tests
+        run: ./gradlew test
 
       - name: Build with Gradle
         run: ./gradlew build
